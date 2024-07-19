@@ -1,4 +1,4 @@
-package com.dev.hakeem.nextcash.web.dto;
+package com.dev.hakeem.nextcash.web.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -12,6 +12,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserUpdatePasswordDTO {
+
+    private Long id;
 
     @NotBlank(message = "Current password cannot be blank")
     private String currentPassword;
