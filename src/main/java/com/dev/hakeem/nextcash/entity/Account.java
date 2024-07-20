@@ -50,6 +50,9 @@ public class Account {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Timestamp updatedAt;
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;
 
     @Override
     public boolean equals(Object o) {

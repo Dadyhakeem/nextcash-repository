@@ -1,47 +1,44 @@
 package com.dev.hakeem.nextcash.web.controller;
 
 import com.dev.hakeem.nextcash.entity.Account;
-import com.dev.hakeem.nextcash.repository.AccountRepository;
 import com.dev.hakeem.nextcash.service.AccountService;
-
 import com.dev.hakeem.nextcash.web.mapper.ToAccountMapper;
 import com.dev.hakeem.nextcash.web.request.AccountRequest;
-
 import com.dev.hakeem.nextcash.web.response.AccountResponse;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/accounts")
+@RequestMapping("/api/v1/accounts")
 public class AccountController {
 
     private final AccountService service;
-    private final AccountRepository accountRepository;
     private final ToAccountMapper toAccountMapper;
 
-    public AccountController(AccountService service, AccountRepository accountRepository, ToAccountMapper toAccountMapper) {
+    @Autowired
+    public AccountController(AccountService service, ToAccountMapper toAccountMapper) {
         this.service = service;
-        this.accountRepository = accountRepository;
         this.toAccountMapper = toAccountMapper;
     }
 
     @PostMapping
-    public ResponseEntity<AccountResponse> createAccount(@RequestBody AccountRequest request) {
+    public ResponseEntity<AccountResponse> createAccount(@Valid @RequestBody AccountRequest request) {
         Account account = service.createAccount(request);
-        AccountResponse response = toAccountMapper.ToReponse(account);
+        AccountResponse response = toAccountMapper.toReponse(account);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
-
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AccountResponse> getAccountById(@PathVariable Long id) {
         Account account = service.buscarPorId(id);
-        AccountResponse response = toAccountMapper.ToReponse(account);
+        AccountResponse response = toAccountMapper.toReponse(account);
         return ResponseEntity.ok(response);
     }
 
@@ -49,7 +46,7 @@ public class AccountController {
     public ResponseEntity<List<AccountResponse>> listAllAccounts() {
         List<Account> accounts = service.listarTodos();
         List<AccountResponse> responseList = accounts.stream()
-                .map(toAccountMapper::ToReponse)
+                .map(toAccountMapper::toReponse)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(responseList);
     }

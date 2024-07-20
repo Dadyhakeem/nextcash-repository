@@ -1,5 +1,6 @@
 package com.dev.hakeem.nextcash.web.request;
 
+import com.dev.hakeem.nextcash.entity.User;
 import com.dev.hakeem.nextcash.enums.AccountType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -31,6 +32,8 @@ public class AccountRequest {
 
     @NotNull(message = "Account type cannot be null")
     private AccountType accountType;
+    @NotNull
+    private Long user;
 
     @Override
     public boolean equals(Object o) {
