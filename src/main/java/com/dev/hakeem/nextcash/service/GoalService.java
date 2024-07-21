@@ -48,7 +48,8 @@ public class GoalService {
               return repository.findById(id);
          }
 
-    public Goal atualizar(GoalRequest request) {
+    public Goal atualizar(GoalRequest request)
+    {
         Goal goal = repository.findById(request.getId())
                 .orElseThrow(() -> new BusinessException("Goal não encontrada"));
 
@@ -67,6 +68,22 @@ public class GoalService {
 
         return goal;
     }
+
+    public void deletarPorId(Long id, GoalRequest request) {
+        Optional<Goal> optionalGoal = repository.findById(id);
+        if (!optionalGoal.isPresent()) {
+            throw new BusinessException("Meta não encontrada");
+        }
+
+        Goal goal = optionalGoal.get();
+
+        if (!goal.getUserid().getId().equals(request.getUserid())) {
+            throw new BusinessException("Usuário não autorizado a deletar esta meta");
+        }
+
+        repository.deleteById(id);
+    }
+
 
 
 
