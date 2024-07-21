@@ -11,6 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -39,7 +40,7 @@ public class Goal {
 
     @NotNull(message = "Deadline cannot be null")
     @Column(name = "deadline", nullable = false)
-    private Date deadline;
+    private LocalDate deadline;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -50,6 +51,6 @@ public class Goal {
     private Timestamp updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "userid", nullable = false)
+    private User userid;
 }
