@@ -6,6 +6,8 @@ import lombok.Setter;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Future;
+
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
@@ -27,10 +29,10 @@ public class GoalRequest {
 
     @NotNull(message = "O prazo não pode ser nulo")
     @Future(message = "O prazo deve ser uma data futura")
-    private Date deadline;
+    private LocalDate deadline;
 
     @NotNull(message = "O usuário não pode ser nulo")
-    private User user;
+    private Long userid;
 
 
 }
