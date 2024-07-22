@@ -11,6 +11,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -18,7 +19,8 @@ import java.util.Date;
 @AllArgsConstructor @NoArgsConstructor
 @Entity
 @Table(name = "tb_investment")
-public class Investiment {
+public class Investiment implements Serializable {
+    private static final long serialversion= 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -9,6 +9,8 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
@@ -19,7 +21,8 @@ import java.util.Objects;
 @NoArgsConstructor
 @Entity
 @Table(name = "tb_transaction")
-public class Transaction {
+public class Transaction implements Serializable {
+    private static final long serialversion= 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
