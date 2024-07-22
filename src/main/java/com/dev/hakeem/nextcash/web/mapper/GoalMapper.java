@@ -23,9 +23,6 @@ public class GoalMapper {
 
     public Goal toGoalrequeste(GoalRequest request){
         Optional<User> user = userRepository.findById(request.getUserid());
-        if (!user.isPresent()){
-            throw new BusinessException("Usuário não encontrado");
-        }
 
         Goal goal = new Goal();
         goal.setId(request.getId());

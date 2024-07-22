@@ -48,39 +48,38 @@ public class GoalService {
               return repository.findById(id);
          }
 
-    public Goal atualizar(GoalRequest request)
-    {
+    public Goal atualizar(GoalRequest request) {
+
         Goal goal = repository.findById(request.getId())
                 .orElseThrow(() -> new BusinessException("Goal não encontrada"));
 
-        // Verificando se o usuário associado à meta é o mesmo do request
-        if (!goal.getUserid().equals(request.getUserid())) {
-            throw new BusinessException("Usuário não autorizado a atualizar esta meta");
+
+
+
+
+        if (request.getName() != null && !request.getName().isBlank()) {
+            goal.setName(request.getName());
+        }
+        if (request.getTargetAmount() != null && request.getTargetAmount() >= 0) {
+            goal.setTargetAmount(request.getTargetAmount());
+        }
+        if (request.getCurrentAmount() != null && request.getCurrentAmount() >= 0) {
+            goal.setCurrentAmount(request.getCurrentAmount());
+        }
+        if (request.getDeadline() != null) {
+            goal.setDeadline(request.getDeadline());
         }
 
-        // Atualiza os campos da meta com os valores do request
-        goal.setTargetAmount(request.getTargetAmount());
-        goal.setCurrentAmount(request.getCurrentAmount());
-        goal.setDeadline(request.getDeadline());
 
-        // Salva a meta atualizada no repositório
-        repository.save(goal);
-
-        return goal;
+        return repository.save(goal);
     }
 
-    public void deletarPorId(Long id, GoalRequest request) {
-        Optional<Goal> optionalGoal = repository.findById(id);
-        if (!optionalGoal.isPresent()) {
-            throw new BusinessException("Meta não encontrada");
+
+
+    public void deletarPorId(Long id) {
+        if (!repository.existsById(id)) {
+            throw new BusinessException("Goal não encontrada com o ID: " + id);
         }
-
-        Goal goal = optionalGoal.get();
-
-        if (!goal.getUserid().getId().equals(request.getUserid())) {
-            throw new BusinessException("Usuário não autorizado a deletar esta meta");
-        }
-
         repository.deleteById(id);
     }
 
