@@ -10,9 +10,11 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -20,7 +22,8 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 @Table(name = "tb_goal")
-public class Goal {
+public class Goal implements Serializable {
+    private static final long serialversion= 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,4 +56,17 @@ public class Goal {
     @ManyToOne
     @JoinColumn(name = "userid", nullable = false)
     private User userid;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Goal goal = (Goal) o;
+        return Objects.equals(id, goal.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

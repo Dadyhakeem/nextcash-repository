@@ -27,7 +27,7 @@ public class GoalController {
 
 
     @PostMapping
-    public ResponseEntity<GoalResponse> createGoal(@ Valid@RequestBody GoalRequest request){
+    public ResponseEntity<GoalResponse> createGoal(@Valid @RequestBody GoalRequest request){
         Goal goal = service.createGoal(request);
         GoalResponse response = mapper.toGoalResponse(goal);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -43,17 +43,20 @@ public class GoalController {
 
 
     @DeleteMapping("/{id}")
-    public  ResponseEntity<Void> deletarPorId(@Valid @PathVariable Long id,@RequestBody GoalRequest request){
-        service.deletarPorId(id,request);
+    public ResponseEntity<Void> deletarPorId(@PathVariable Long id) {
+        service.deletarPorId(id);
         return ResponseEntity.noContent().build();
     }
 
 
+
     @PutMapping("/{id}")
-    public ResponseEntity<Goal> atualizar( @Valid @RequestBody GoalRequest request){
+    public ResponseEntity<Goal> atualizar(@PathVariable Long id, @Valid @RequestBody GoalRequest request) {
+        request.setId(id);
         Goal goal = service.atualizar(request);
         return ResponseEntity.ok().body(goal);
     }
+
 
 
     @GetMapping
