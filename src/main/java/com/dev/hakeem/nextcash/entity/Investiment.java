@@ -56,5 +56,5 @@ public class Investiment implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private User userid;
 }
