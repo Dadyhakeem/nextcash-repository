@@ -41,7 +41,6 @@ public class GoalService {
           // listar
          public List<Goal> ListarTodos(){
             return repository.findAll();
-
          }
 
          public Optional<Goal>buscarPorId(Long id){
@@ -52,11 +51,6 @@ public class GoalService {
 
         Goal goal = repository.findById(request.getId())
                 .orElseThrow(() -> new BusinessException("Goal não encontrada"));
-
-
-
-
-
         if (request.getName() != null && !request.getName().isBlank()) {
             goal.setName(request.getName());
         }
