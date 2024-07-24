@@ -21,7 +21,7 @@ public class UserCreateDTO {
     private String username;
 
     @NotBlank(message = "Email cannot be blank")
-    @Email(message = "Invalid email format")
+    @Email(message = "Formato do email esta invalido",regexp = "^[a-z0-9.+-]+@[a-z0-9.-]+\\.[a-z]{2,}$")
     private String email;
 
     @NotBlank(message = "Password cannot be blank")

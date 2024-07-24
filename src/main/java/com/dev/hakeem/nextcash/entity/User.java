@@ -1,6 +1,8 @@
 package com.dev.hakeem.nextcash.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +26,7 @@ public class User implements Serializable {
     private  Long id;
     @Column(name = "username")
     private String username;
-    @Column(name = "email",nullable = false,length = 100)
+    @Column(name = "email",nullable = false,unique = true, length = 100)
     private  String email;
     @Column(name = "Password",nullable = false)
     private String password;

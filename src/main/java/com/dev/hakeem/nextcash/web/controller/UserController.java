@@ -7,6 +7,7 @@ import com.dev.hakeem.nextcash.web.mapper.ToUserMapper;
 import com.dev.hakeem.nextcash.web.request.UserCreateDTO;
 import com.dev.hakeem.nextcash.web.request.UserUpdatePasswordDTO;
 import com.dev.hakeem.nextcash.web.response.UserCreateResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class UserController {
         this.service = service;
     }
     @PostMapping
-    public ResponseEntity<UserCreateResponse> cadastrar(@RequestBody UserCreateDTO createDTO) {
+    public ResponseEntity<UserCreateResponse> cadastrar(@Valid @RequestBody UserCreateDTO createDTO) {
             User user = ToUserMapper.CreateUserTO(createDTO);
         User userSalvo = service.cadastrar(user);
         UserCreateResponse obj = ToUserMapper.ResponseUserTO(userSalvo);
@@ -34,7 +35,7 @@ public class UserController {
 
     }
     @PutMapping("{id}/update-password")
-    public ResponseEntity<Void> atualizarSenha(@RequestBody UserUpdatePasswordDTO updatePasswordDTO) {
+    public ResponseEntity<Void> atualizarSenha(@Valid @RequestBody UserUpdatePasswordDTO updatePasswordDTO) {
         try {
             service.atualizarSenha(updatePasswordDTO);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -50,7 +51,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<User> buscarPorId(@Valid @PathVariable Long id) {
         try {
             User user = service.buscarPorId(id);
             return ResponseEntity.ok(user);
@@ -60,7 +61,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUser(@Valid @PathVariable Long id) {
         try {
             service.deleteUser(id);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
