@@ -2,6 +2,7 @@ package com.dev.hakeem.nextcash.service;
 
 import com.dev.hakeem.nextcash.entity.Account;
 import com.dev.hakeem.nextcash.entity.Transaction;
+import com.dev.hakeem.nextcash.exception.EntityNotFoundException;
 import com.dev.hakeem.nextcash.repository.AccountRepository;
 import com.dev.hakeem.nextcash.repository.TranssactionRepository;
 import com.dev.hakeem.nextcash.web.exception.BusinessException;
@@ -26,7 +27,7 @@ public class TransactionService {
     public Transaction createTransaction(TransactionRequest request){
         Optional<Account> account = accountRepository.findById(request.getAccountId());
         if (!account.isPresent()) {
-            throw  new BusinessException("Conta nao encontrada");
+            throw  new EntityNotFoundException("Conta nao encontrada");
         }
             Transaction transaction = new Transaction();
             transaction.setId(request.getId());
@@ -43,14 +44,14 @@ public class TransactionService {
 
     public void deletar(Long id){
          if (!repository.existsById(id)){
-             throw new BusinessException("Transaction nao encontrada");
+             throw new EntityNotFoundException(String.format("Transaction id = %s não encontrado",id));
          }
          repository.deleteById(id);
     }
 
     public Transaction buscarPorid(Long id){
        return repository.findById(id)
-            .orElseThrow(() -> new BusinessException("Transaction não encontrado"));
+            .orElseThrow(() -> new EntityNotFoundException(String.format("Transaction id = %s não encontrado",id)));
     }
 
     public List<Transaction> listarTodos(){

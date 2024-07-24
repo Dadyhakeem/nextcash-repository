@@ -2,9 +2,9 @@ package com.dev.hakeem.nextcash.service;
 
 import com.dev.hakeem.nextcash.entity.Goal;
 import com.dev.hakeem.nextcash.entity.User;
+import com.dev.hakeem.nextcash.exception.EntityNotFoundException;
 import com.dev.hakeem.nextcash.repository.GoalRepository;
 import com.dev.hakeem.nextcash.repository.UserRepository;
-import com.dev.hakeem.nextcash.web.exception.BusinessException;
 import com.dev.hakeem.nextcash.web.request.GoalRequest;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +26,7 @@ public class GoalService {
              Optional<User> users = userRepository.findById(request.getUserid());
 
              if (!users.isPresent()){
-                  new BusinessException("Usuario nao encontrada");
+                  new EntityNotFoundException("Usuario nao encontrada");
              }
 
              Goal gol = new Goal();
@@ -50,7 +50,7 @@ public class GoalService {
     public Goal atualizar(GoalRequest request) {
 
         Goal goal = repository.findById(request.getId())
-                .orElseThrow(() -> new BusinessException("Goal não encontrada"));
+                .orElseThrow(() -> new EntityNotFoundException("Goal não encontrada"));
         if (request.getName() != null && !request.getName().isBlank()) {
             goal.setName(request.getName());
         }
@@ -72,7 +72,7 @@ public class GoalService {
 
     public void deletarPorId(Long id) {
         if (!repository.existsById(id)) {
-            throw new BusinessException("Goal não encontrada com o ID: " + id);
+            throw new EntityNotFoundException(String.format("Conta id = %s não encontrado",id));
         }
         repository.deleteById(id);
     }
