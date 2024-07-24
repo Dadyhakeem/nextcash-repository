@@ -3,10 +3,10 @@ package com.dev.hakeem.nextcash.service;
 
 import com.dev.hakeem.nextcash.entity.Category;
 import com.dev.hakeem.nextcash.entity.User;
+import com.dev.hakeem.nextcash.exception.EntityNotFoundException;
 import com.dev.hakeem.nextcash.repository.AccountRepository;
 import com.dev.hakeem.nextcash.repository.CategoryRepository;
 import com.dev.hakeem.nextcash.repository.UserRepository;
-import com.dev.hakeem.nextcash.web.exception.BusinessException;
 import com.dev.hakeem.nextcash.web.request.CategoryRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class CategoryService {
         Optional<User> user = userRepository.findById(request.getUserid());
 
         if (!user.isPresent()){
-                 throw  new BusinessException("User nao encontrada");
+                 throw  new EntityNotFoundException("Usuario não encontrado");
         }
         Category category =new Category();
         category.setName(request.getName());
@@ -41,7 +41,7 @@ public class CategoryService {
 
     public Category atualizar(CategoryRequest request){
         Category category = repository.findById(request.getId())
-                .orElseThrow(() -> new BusinessException("Goal não encontrada"));
+                .orElseThrow(() -> new EntityNotFoundException("Categoria  não encontrado"));
         category.setName(request.getName());
         category.setDescription(request.getDescription());
         return repository.save(category);
@@ -50,7 +50,7 @@ public class CategoryService {
 
     public Category buscarPorId(Long id){
        return repository.findById(id)
-               .orElseThrow(() -> new BusinessException("Usuário não encontrado"));
+               .orElseThrow(() -> new EntityNotFoundException(String.format("Categoria id = %s não encontrado",id)));
     }
 
     public List<Category> listarTodos(){
@@ -59,7 +59,7 @@ public class CategoryService {
 
     public void deletar(Long id) {
         if (!repository.existsById(id)) {
-            throw new BusinessException("Goal não encontrada com o ID: " + id);
+            throw new EntityNotFoundException(String.format("Categoria id = %s não encontrado",id));
         }
          repository.deleteById(id);
     }
