@@ -3,6 +3,7 @@ package com.dev.hakeem.nextcash.service;
 import com.dev.hakeem.nextcash.entity.Budget;
 import com.dev.hakeem.nextcash.entity.Category;
 import com.dev.hakeem.nextcash.entity.User;
+import com.dev.hakeem.nextcash.exception.EntityNotFoundException;
 import com.dev.hakeem.nextcash.repository.BudgetRepository;
 import com.dev.hakeem.nextcash.repository.CategoryRepository;
 import com.dev.hakeem.nextcash.repository.UserRepository;
@@ -31,9 +32,9 @@ public class BudgetService {
     public Budget createBudget(BudgetRequest request) {
 
         User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new BusinessException("Usuário não encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
         Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new BusinessException("Categoria não encontrada"));
+                .orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada"));
         Budget budget = new Budget();
         budget.setAmount(request.getAmount());
         budget.setStartDate(request.getStartDate());
@@ -49,7 +50,7 @@ public class BudgetService {
 
     public  void deletaPeloId(Long id){
         if (!repository.existsById(id)){
-            throw new BusinessException("Budget nao encontrada com o ID "+id);
+            throw new EntityNotFoundException(String.format("Orçamento id = %s não encontrado",id));
         }
         repository.deleteById(id);
 
@@ -57,23 +58,23 @@ public class BudgetService {
 
     public Budget buscarPeloId(Long id){
         return repository.findById(id)
-                 .orElseThrow(()-> new BusinessException("Budget nao encontrada com o ID "+id));
+                 .orElseThrow(()-> new EntityNotFoundException(String.format("Orçamento id = %s não encontrado",id)));
 
     }
 
     public Budget atualizar(BudgetRequest request) {
 
         Budget budget = repository.findById(request.getId())
-                .orElseThrow(() -> new BusinessException("Orçamento não encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Orçamento não encontrado"));
 
         if (!budget.getUser().getId().equals(request.getUserId())) {
-            throw new BusinessException("Usuário não autorizado a atualizar este orçamento");
+            throw new EntityNotFoundException("Usuário não autorizado a atualizar este orçamento");
         }
         budget.setAmount(request.getAmount());
         budget.setStartDate(request.getStartDate());
         budget.setEndDate(request.getEndDate());
         budget.setCategory(categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new BusinessException("Categoria não encontrada")));
+                .orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada")));
         return repository.save(budget);
     }
 
