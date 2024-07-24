@@ -29,26 +29,26 @@ public class Budget implements Serializable {
     @Column(name = "amount", nullable = false)
     private Double amount;
 
-    @Column(name = "start_date", nullable = false)
+    @Column(name = "startDate", nullable = false)
     private Date startDate;
 
-    @Column(name = "end_date", nullable = false)
+    @Column(name = "endDate", nullable = false)
     private Date endDate;
 
     @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
+    @Column(name = "createdAt", updatable = false)
     private Timestamp createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at")
+    @Column(name = "updatedAt")
     private Timestamp updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "userId", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "categoryId", nullable = false)
     private Category category;
 
     @Override

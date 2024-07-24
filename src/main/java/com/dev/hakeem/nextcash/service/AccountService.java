@@ -1,10 +1,9 @@
 package com.dev.hakeem.nextcash.service;
-
 import com.dev.hakeem.nextcash.entity.Account;
 import com.dev.hakeem.nextcash.entity.User;
+import com.dev.hakeem.nextcash.exception.EntityNotFoundException;
 import com.dev.hakeem.nextcash.repository.AccountRepository;
 import com.dev.hakeem.nextcash.repository.UserRepository;
-import com.dev.hakeem.nextcash.web.exception.BusinessException;
 import com.dev.hakeem.nextcash.web.request.AccountRequest;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +25,7 @@ public class AccountService {
         Optional<User> userOptional = userRepository.findById(request.getUser());
 
         if (!userOptional.isPresent()) {
-            throw new BusinessException("Usuário não encontrado");
+            throw new EntityNotFoundException("Usuário não encontrado");
         }
 
         // Cria uma nova instância de Account
@@ -44,7 +43,7 @@ public class AccountService {
 
     public Account buscarPorId(Long id){
         return repository.findById(id)
-                .orElseThrow(() -> new BusinessException("Usuário não encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Conta id = %s não encontrado",id)));
 
     }
 
@@ -54,7 +53,7 @@ public class AccountService {
 
     public void deleteAccount(Long id){
         Account account = repository.findById(id)
-                .orElseThrow(()-> new BusinessException("Conta na encontrada"));
+                .orElseThrow(()-> new EntityNotFoundException(String.format("Conta id = %s não encontrado",id)));
         repository.delete(account);
     }
 }
