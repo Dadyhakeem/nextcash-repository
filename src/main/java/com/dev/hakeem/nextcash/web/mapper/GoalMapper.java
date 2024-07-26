@@ -43,7 +43,7 @@ public class GoalMapper {
         response.setTargetAmount(goal.getTargetAmount());
         response.setCurrentAmount(goal.getCurrentAmount());
         response.setDeadline(goal.getDeadline());
-        response.setUser(goal.getUserid());  // Associando o usuário corretamente
+          // Associando o usuário corretamente
         return response;
     }
 

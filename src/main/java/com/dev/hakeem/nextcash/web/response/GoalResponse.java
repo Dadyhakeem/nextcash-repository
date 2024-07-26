@@ -32,7 +32,7 @@ public class GoalResponse {
     @Future(message = "O prazo deve ser uma data futura")
     private LocalDate deadline;
 
-    private User user;
+
 
 
 }
