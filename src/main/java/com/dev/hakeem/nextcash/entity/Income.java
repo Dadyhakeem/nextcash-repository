@@ -1,5 +1,6 @@
 package com.dev.hakeem.nextcash.entity;
 
+import com.dev.hakeem.nextcash.enums.CategoryIncome;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,9 +27,9 @@ public class Income {
     @JoinColumn(name = "transactionId")
     private Transaction transaction;
 
-    @ManyToOne
-    @JoinColumn(name = "categoryId")
-    private Category category;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "categoryIncome")
+    private CategoryIncome categoryIncome;
 
     @Column(name = "amount", nullable = false, precision = 2)
     private Double amount;

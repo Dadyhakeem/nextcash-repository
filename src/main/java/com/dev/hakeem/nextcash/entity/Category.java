@@ -48,6 +48,8 @@ public class Category implements Serializable {
     private User userid;
 
 
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

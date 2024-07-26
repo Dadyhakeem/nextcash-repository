@@ -46,19 +46,24 @@ public class TransferencaService {
         Transaction transaction = transsactionRepository.findById(request.getTransaction())
                 .orElseThrow(() -> new EntityNotFoundException("Transação não encontrada."));
 
-        // Lógica de transferência
-        if (accountOrigem.getBalance() < request.getValor()) {
-            throw new IllegalArgumentException("Saldo insuficiente na conta origem.");
-        }
-        accountOrigem.setBalance(accountOrigem.getBalance() - request.getValor());
-        accountDestino.setBalance(accountDestino.getBalance() + request.getValor());
+        // Verifica se o saldo da conta origem é suficiente
+        debitar(accountOrigem, request.getValor());
+        creditar(accountDestino, request.getValor());
 
         // Salva as contas e a transação no repositório
         accountRepository.save(accountOrigem);
         accountRepository.save(accountDestino);
         transsactionRepository.save(transaction);
-    }
 
+        // Cria e salva a transferência
+        Transferenca transferenca = new Transferenca();
+        transferenca.setDescricao(request.getDescricao());
+        transferenca.setAccountOrigem(accountOrigem);
+        transferenca.setAccountDestino(accountDestino);
+        transferenca.setTransaction(transaction);
+        transferenca.setValor(request.getValor());
+        repository.save(transferenca);
+    }
 
     public Transferenca obterTranferPorId(Long id) {
         return repository.findById(id)
@@ -66,13 +71,12 @@ public class TransferencaService {
     }
 
     public void deletPorId(Long id) {
-        if(!repository.existsById(id)){
-                throw new EntityNotFoundException(String.format("Transaction id = %s não encontrado",id));
+        if (!repository.existsById(id)) {
+            throw new EntityNotFoundException(String.format("Transferência id = %s não encontrado", id));
         }
         repository.deleteById(id);
     }
 
-    // Métodos  para debitar e creditar
     private void debitar(Account origem, Double valor) {
         if (origem.getBalance() < valor) {
             throw new IllegalArgumentException("Saldo insuficiente na conta de origem.");

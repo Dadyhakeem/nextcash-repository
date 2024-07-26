@@ -1,5 +1,6 @@
 package com.dev.hakeem.nextcash.entity;
 
+import com.dev.hakeem.nextcash.enums.CategoryExpense;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "tb_expense")
+@Table(name = "expense")
 public class Expense {
 
     @Id
@@ -25,9 +26,9 @@ public class Expense {
     @JoinColumn(name = "transactionId")
     private Transaction transaction;
 
-    @ManyToOne
-    @JoinColumn(name = "categoryId")
-    private Category category;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "categoryExpense")
+    private CategoryExpense categoryExpense;
 
     @Column(name = "amount", nullable = false, precision = 2)
     private Double amount;
