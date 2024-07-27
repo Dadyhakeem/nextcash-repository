@@ -25,14 +25,14 @@ public class Cartao {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "account_id", nullable = false)
+    @JoinColumn(name = "accountid", nullable = false)
     private Account account;
 
     @Column(name = "descricao")
     private String descricao;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "marca_cartao")
+    @Column(name = "marcaCartao")
     private MarcaCartao marcaCartao;
 
     @Column(name = "limite")
