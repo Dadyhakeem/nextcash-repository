@@ -2,9 +2,17 @@ package com.dev.hakeem.nextcash.web.controller;
 
 import com.dev.hakeem.nextcash.entity.Goal;
 import com.dev.hakeem.nextcash.service.GoalService;
+import com.dev.hakeem.nextcash.web.exception.ErroMessage;
 import com.dev.hakeem.nextcash.web.mapper.GoalMapper;
 import com.dev.hakeem.nextcash.web.request.GoalRequest;
+import com.dev.hakeem.nextcash.web.response.CartaoResponse;
 import com.dev.hakeem.nextcash.web.response.GoalResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-
+@Tag(name = "Goal",description = "Contem todos as operacoes relativas aos recursos para criar , edition e leitura de uma Goal.")
 @RestController
 @RequestMapping("/api/v1/goals")
 public class GoalController {
@@ -26,6 +34,13 @@ public class GoalController {
     }
 
 
+    @Operation(summary = "Criar Goal(meta)",description = "criar Goal",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Goal criada com sucesso",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = GoalResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Recursos nao processado por dados de entrada  invalidos",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErroMessage.class)))
+            })
     @PostMapping
     public ResponseEntity<GoalResponse> createGoal(@Valid @RequestBody GoalRequest request){
         Goal goal = service.createGoal(request);
@@ -34,6 +49,13 @@ public class GoalController {
     }
 
 
+    @Operation(summary = "Recuperar goal pelo id",description = "Recuperar goal pelo id",
+            responses = {
+                    @ApiResponse(responseCode = "200",description = "Goal recuperado com sucesso",
+                            content = @Content(mediaType = "application/json",schema = @Schema(implementation = GoalResponse.class))),
+                    @ApiResponse(responseCode = "404",description = "Goal nao encontrada",
+                            content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
+            })
     @GetMapping("/{id}")
     public ResponseEntity<Goal> buscarPorId(@Valid @PathVariable Long id) {
         Optional<Goal> goal = service.buscarPorId(id);
@@ -42,6 +64,15 @@ public class GoalController {
     }
 
 
+
+
+    @Operation(summary = "Deletar goal pelo id",description = "deletar goal pelo id",
+            responses = {
+                    @ApiResponse(responseCode = "204",description = "Goal deletada com sucesso",
+                            content = @Content(mediaType = "application/json",schema = @Schema(implementation = Void.class))),
+                    @ApiResponse(responseCode = "404",description = "Cartao nao encontrada",
+                            content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
+            })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarPorId(@PathVariable Long id) {
         service.deletarPorId(id);
@@ -49,7 +80,15 @@ public class GoalController {
     }
 
 
-
+    @Operation(summary = "Atualizar goal", description = " atualizar goal",
+            responses = {
+                    @ApiResponse(responseCode = "200",description = "Goal atualizada com sucesso",
+                            content = @Content(mediaType = "application/json",schema = @Schema(implementation = GoalResponse.class))),
+                    @ApiResponse(responseCode = "400",description = "Usuario e goal  nao confere",
+                            content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class))),
+                    @ApiResponse(responseCode = "404", description = "Goal nao encontrado",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErroMessage.class)))
+            })
     @PutMapping("/{id}")
     public ResponseEntity<Goal> atualizar(@PathVariable Long id, @Valid @RequestBody GoalRequest request) {
         request.setId(id);
@@ -58,7 +97,12 @@ public class GoalController {
     }
 
 
-
+    @Operation(summary = "Listar todos os goal",description = "Recurso pra listar todos os goal",
+            responses = {
+                    @ApiResponse(responseCode = "200",description = "Todas os goal criados",
+                            content = @Content(mediaType = "application/json",
+                                    array  = @ArraySchema(schema = @Schema(implementation = GoalResponse.class)))),
+            })
     @GetMapping
     public  ResponseEntity<List<Goal>> listartodas(){
         List<Goal> goals = service.ListarTodos();
