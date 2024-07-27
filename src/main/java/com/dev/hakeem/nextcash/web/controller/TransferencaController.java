@@ -3,18 +3,25 @@ package com.dev.hakeem.nextcash.web.controller;
 import com.dev.hakeem.nextcash.entity.Transferenca;
 import com.dev.hakeem.nextcash.exception.EntityNotFoundException;
 import com.dev.hakeem.nextcash.service.TransferencaService;
+import com.dev.hakeem.nextcash.web.exception.ErroMessage;
 import com.dev.hakeem.nextcash.web.mapper.TransfeencaMapper;
 import com.dev.hakeem.nextcash.web.request.TransferencaRequest;
 import com.dev.hakeem.nextcash.web.exception.BusinessException;
+import com.dev.hakeem.nextcash.web.response.CartaoResponse;
 import com.dev.hakeem.nextcash.web.response.TransferencaResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
+@Tag(name = "Transferencia",description = "Contem todos as operacoes relativas aos recursos para criar , edition e leitura de uma Transferencia.")
 @RestController
 @RequestMapping("/api/v1/transferencias")
 public class TransferencaController {
@@ -28,6 +35,14 @@ public class TransferencaController {
         this.mapper = mapper;
     }
 
+
+    @Operation(summary = "Criar Transferenca",description = "criar Transferenca",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Transferenca criada com sucesso",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransferencaResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Recursos nao processado por dados de entrada  invalidos",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErroMessage.class)))
+            })
     @PostMapping("/realizar")
     public ResponseEntity<String> realizarTransferencia(@Valid @RequestBody TransferencaRequest transferencaRequest) {
         try {
@@ -40,6 +55,14 @@ public class TransferencaController {
         }
     }
 
+
+    @Operation(summary = "Recuperar Transferenca pelo id",description = "Recuperar Transferenca pelo id",
+            responses = {
+                    @ApiResponse(responseCode = "200",description = "Transferenca recuperado com sucesso",
+                            content = @Content(mediaType = "application/json",schema = @Schema(implementation = TransferencaResponse.class))),
+                    @ApiResponse(responseCode = "404",description = "Transferenca nao encontrada",
+                            content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
+            })
     @GetMapping("/{id}")
     public ResponseEntity<TransferencaResponse> obterTransferenciaPorId(@Valid @PathVariable Long id) {
         try {
@@ -52,6 +75,14 @@ public class TransferencaController {
         }
     }
 
+
+    @Operation(summary = "Deletar Transferenca pelo id",description = "deletar Transferenca pelo id",
+            responses = {
+                    @ApiResponse(responseCode = "204",description = "Transferenca deletada com sucesso",
+                            content = @Content(mediaType = "application/json",schema = @Schema(implementation = Void.class))),
+                    @ApiResponse(responseCode = "404",description = "Transferenca nao encontrada",
+                            content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
+            })
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletarTransferencia(@Valid @PathVariable Long id) {
         try {
