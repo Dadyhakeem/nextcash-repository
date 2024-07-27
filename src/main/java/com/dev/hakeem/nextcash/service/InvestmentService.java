@@ -5,7 +5,6 @@ import com.dev.hakeem.nextcash.entity.User;
 import com.dev.hakeem.nextcash.exception.EntityNotFoundException;
 import com.dev.hakeem.nextcash.repository.InvestmentRepository;
 import com.dev.hakeem.nextcash.repository.UserRepository;
-import com.dev.hakeem.nextcash.web.exception.BusinessException;
 import com.dev.hakeem.nextcash.web.request.InvestmentRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

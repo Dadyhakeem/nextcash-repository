@@ -71,7 +71,7 @@ public class ExpensaService {
     public  Expense editarIncome(ExpenseRequest request){
         Expense expense = repository.findById(request.getId())
                 .orElseThrow(()-> new EntityNotFoundException("Receita não encontrado"));
-        expense.setId(request.getId());
+
         expense.setDescricao(request.getDescricao());
         expense.setAmount(request.getAmount());
         expense.setCategoryExpense(request.getCategoryExpense());

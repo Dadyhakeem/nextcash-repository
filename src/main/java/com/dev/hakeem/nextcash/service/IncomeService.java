@@ -1,12 +1,10 @@
 package com.dev.hakeem.nextcash.service;
 
 import com.dev.hakeem.nextcash.entity.Account;
-import com.dev.hakeem.nextcash.entity.Category;
 import com.dev.hakeem.nextcash.entity.Income;
 import com.dev.hakeem.nextcash.entity.Transaction;
 import com.dev.hakeem.nextcash.exception.EntityNotFoundException;
 import com.dev.hakeem.nextcash.repository.AccountRepository;
-import com.dev.hakeem.nextcash.repository.CategoryRepository;
 import com.dev.hakeem.nextcash.repository.IncomeRepository;
 import com.dev.hakeem.nextcash.repository.TranssactionRepository;
 import com.dev.hakeem.nextcash.web.request.IncomeRequest;
@@ -72,7 +70,7 @@ public class IncomeService {
     public  Income editarIncome(IncomeRequest request){
         Income income = repository.findById(request.getId())
                 .orElseThrow(()-> new EntityNotFoundException("Receita não encontrado"));
-        income.setId(request.getId());
+
         income.setDescricao(request.getDescricao());
         income.setAmount(request.getAmount());
         income.setCategoryIncome(request.getCategoryIncome());
