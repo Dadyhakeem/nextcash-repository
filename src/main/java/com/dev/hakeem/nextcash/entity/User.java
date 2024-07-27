@@ -1,5 +1,6 @@
 package com.dev.hakeem.nextcash.entity;
 
+import com.dev.hakeem.nextcash.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
@@ -30,6 +31,9 @@ public class User implements Serializable {
     private  String email;
     @Column(name = "Password",nullable = false)
     private String password;
+     @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Role role = Role.ROLE_CLIENT;
     @Column(name = "created_at")
     private Timestamp created_at;
     @Column(name = "updated_at")
