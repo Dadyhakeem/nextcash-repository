@@ -2,6 +2,11 @@ package com.dev.hakeem.nextcash.web.request;
 
 import com.dev.hakeem.nextcash.entity.Category;
 import com.dev.hakeem.nextcash.entity.User;
+import com.dev.hakeem.nextcash.enums.CategoryExpense;
+import com.dev.hakeem.nextcash.enums.CategoryIncome;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -34,6 +39,6 @@ public class BudgetRequest {
     @NotNull(message = "O usuário não pode ser nulo")
     private Long userId;
 
-    @NotNull(message = "A categoria não pode ser nula")
-    private Long categoryId;
+    @NotNull(message = "CategoryExpense")
+    private CategoryExpense categoryExpense;
 }

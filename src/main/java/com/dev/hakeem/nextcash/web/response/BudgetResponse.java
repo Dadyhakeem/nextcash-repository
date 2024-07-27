@@ -1,5 +1,6 @@
 package com.dev.hakeem.nextcash.web.response;
 
+import com.dev.hakeem.nextcash.enums.CategoryExpense;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,9 @@ public class BudgetResponse {
 
     @NotNull(message = "A data de término não pode ser nula")
     private Date endDate;
+
+    @NotNull(message = "CategoryExpense")
+    private CategoryExpense categoryExpense;
 
 
 }

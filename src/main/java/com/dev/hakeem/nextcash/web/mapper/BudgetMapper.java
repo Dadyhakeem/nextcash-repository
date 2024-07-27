@@ -3,6 +3,7 @@ package com.dev.hakeem.nextcash.web.mapper;
 import com.dev.hakeem.nextcash.entity.Budget;
 import com.dev.hakeem.nextcash.entity.Category;
 import com.dev.hakeem.nextcash.entity.User;
+import com.dev.hakeem.nextcash.exception.EntityNotFoundException;
 import com.dev.hakeem.nextcash.repository.BudgetRepository;
 import com.dev.hakeem.nextcash.repository.CategoryRepository;
 import com.dev.hakeem.nextcash.repository.UserRepository;
@@ -34,18 +35,13 @@ public class BudgetMapper {
         budget.setAmount(request.getAmount());
         budget.setStartDate(request.getStartDate());
         budget.setEndDate(request.getEndDate());
-
+        budget.setCategoryExpense(request.getCategoryExpense());
         Optional<User> user = userRepository.findById(request.getUserId());
-        Optional<Category> category = categoryRepository.findById(request.getCategoryId());
-        if (user.isEmpty()) {
-            throw new BusinessException("Usuário não encontrado");
+        if (!user.isPresent()){
+            throw new EntityNotFoundException("Usuario nao encontrada");
         }
-        if (category.isEmpty()) {
-            throw new BusinessException("Categoria não encontrada");
-        }
-
         budget.setUser(user.get());
-        budget.setCategory(category.get());
+
         return budget;
     }
 
@@ -53,6 +49,7 @@ public class BudgetMapper {
         BudgetResponse response = new BudgetResponse();
         response.setId(budget.getId());
         response.setAmount(budget.getAmount());
+        response.setCategoryExpense(budget.getCategoryExpense());
         response.setStartDate(budget.getStartDate());
         response.setEndDate(budget.getEndDate());
 

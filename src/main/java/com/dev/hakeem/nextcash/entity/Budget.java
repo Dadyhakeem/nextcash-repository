@@ -1,5 +1,7 @@
 package com.dev.hakeem.nextcash.entity;
 
+import com.dev.hakeem.nextcash.enums.CategoryExpense;
+import com.dev.hakeem.nextcash.enums.CategoryIncome;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -47,9 +49,9 @@ public class Budget implements Serializable {
     @JoinColumn(name = "userId", nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "categoryId", nullable = false)
-    private Category category;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "categoryExpense")
+    private CategoryExpense categoryExpense;
 
     @Override
     public boolean equals(Object o) {
