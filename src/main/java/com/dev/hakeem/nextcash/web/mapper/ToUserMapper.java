@@ -11,7 +11,7 @@ public class ToUserMapper {
     public static User CreateUserTO(UserCreateDTO createDTO){
         User user = new User();
 
-        user.setId(createDTO.getId());
+
         user.setEmail(createDTO.getEmail());
         user.setUsername(createDTO.getUsername());
         user.setPassword(createDTO.getPassword());

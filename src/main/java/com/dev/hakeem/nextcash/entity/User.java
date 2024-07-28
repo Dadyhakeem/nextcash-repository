@@ -27,6 +27,8 @@ public class User implements Serializable {
     private  Long id;
     @Column(name = "username")
     private String username;
+
+    @Email(message = "Formato do email esta invalido",regexp = "^[a-z0-9.+-]+@[a-z0-9.-]+\\.[a-z]{2,}$")
     @Column(name = "email",nullable = false,unique = true, length = 100)
     private  String email;
     @Column(name = "Password",nullable = false)
