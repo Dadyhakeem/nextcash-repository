@@ -28,9 +28,7 @@ public class Account implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Name cannot be blank")
-    @Column(name = "name", nullable = false)
-    private String name;
+
 
     @NotNull(message = "Balance cannot be null")
     @Column(name = "balance", nullable = false)

@@ -20,8 +20,7 @@ public class AccountRequest {
 
     private  Long id;
 
-    @NotBlank(message = "Name cannot be blank")
-    private String name;
+
 
     @NotNull(message = "Balance cannot be null")
     @Positive(message = "Balance must be positive")
@@ -40,11 +39,11 @@ public class AccountRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AccountRequest that = (AccountRequest) o;
-        return Objects.equals(name, that.name);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hashCode(id);
     }
 }

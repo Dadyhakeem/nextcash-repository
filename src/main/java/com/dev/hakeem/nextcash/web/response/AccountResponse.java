@@ -18,8 +18,7 @@ import java.util.Objects;
 public class AccountResponse {
     private Long id;
 
-    @NotBlank(message = "Name cannot be blank")
-    private String name;
+
 
     @NotNull(message = "Balance cannot be null")
     @Positive(message = "Balance must be positive")

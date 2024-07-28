@@ -30,7 +30,6 @@ public class AccountService {
 
         // Cria uma nova instância de Account
         Account account = new Account();
-        account.setName(request.getName());
         account.setFinancialInstitution(request.getFinancialInstitution());
         account.setAccountType(request.getAccountType());
         account.setBalance(request.getBalance());

@@ -26,7 +26,7 @@ public class ToAccountMapper {
         Account account = new Account();
 
 
-        account.setName(request.getName());
+
         account.setFinancialInstitution(request.getFinancialInstitution());
         account.setAccountType(request.getAccountType());
         account.setBalance(request.getBalance());
@@ -48,7 +48,6 @@ public class ToAccountMapper {
     public AccountResponse toReponse(Account account){
         AccountResponse response =  new AccountResponse();
         response.setId(account.getId());
-        response.setName(account.getName());
         response.setFinancialInstitution(account.getFinancialInstitution());
        response.setAccountType(account.getAccountType());
         response.setBalance(account.getBalance());
