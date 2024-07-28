@@ -32,6 +32,7 @@ public class User implements Serializable {
     @Column(name = "email",nullable = false,unique = true, length = 100)
     private  String email;
     @Column(name = "Password",nullable = false)
+    @Size(min = 6,max = 6,message = "as senha nao pode ultrapassar 6 digitos")
     private String password;
      @Enumerated(EnumType.STRING)
     @Column(name = "role")

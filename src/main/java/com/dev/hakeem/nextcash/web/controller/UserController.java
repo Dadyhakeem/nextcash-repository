@@ -66,16 +66,15 @@ public class UserController {
                     @ApiResponse(responseCode = "400",description = "Senha nao confere",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class))),
                     @ApiResponse(responseCode = "404", description = "Recursos nao encontrado",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErroMessage.class))),
+                    @ApiResponse(responseCode = "422", description = "Campos invalidos ou mal formatados",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErroMessage.class)))
             })
     @PutMapping("{id}/update-password")
     public ResponseEntity<Void> atualizarSenha(@Valid @RequestBody UserUpdatePasswordDTO update, @PathVariable Long id) {
-        try {
+
            User user = service.atualizarSenha(id,update.getCurrentPassword(),update.getNewPassword(),update.getConfirmPassword());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        } catch (BusinessException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
     }
 
     @Operation(summary = "Listar todos os usuarios cadastrado", description = "Listar todos os usuarios cadastrado",

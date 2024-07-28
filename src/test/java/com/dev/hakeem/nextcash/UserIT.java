@@ -20,7 +20,7 @@ public class UserIT {
     WebTestClient testClient;
 
     @Test
-    public  void createUser_ComUsernameEPaswordValidos_RetornaruserCriadoComStatus201(){
+    public void createUser_ComUsernameEPaswordValidos_RetornaruserCriadoComStatus201() {
         UserCreateDTO createDTO = new UserCreateDTO("dady", "ailton@gmail.com", "123456");
 
         UserCreateResponse responseBody = testClient
@@ -42,7 +42,7 @@ public class UserIT {
 
 
     @Test
-    public  void createUser_ComUsernameInvalidos_RetornarErroMessagestatus422(){
+    public void createUser_ComUsernameInvalidos_RetornarErroMessagestatus422() {
 
 
         ErroMessage responseBody = testClient
@@ -59,7 +59,7 @@ public class UserIT {
         org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
 
 
-         responseBody = testClient
+        responseBody = testClient
                 .post()
                 .uri("/api/v1/users")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -117,7 +117,7 @@ public class UserIT {
 
 
     @Test
-    public  void createUser_ComPasswordInvalidos_RetornarErroMessagestatus422() {
+    public void createUser_ComPasswordInvalidos_RetornarErroMessagestatus422() {
 
 
         ErroMessage responseBody = testClient
@@ -164,7 +164,7 @@ public class UserIT {
 
 
     @Test
-    public  void createUser_ComUsernameRepetido_RetornarErroMessageComStatus409() {
+    public void createUser_ComUsernameRepetido_RetornarErroMessageComStatus409() {
         UserCreateDTO createDTO = new UserCreateDTO("dady", "dady@gmail.com", "123456");
 
         ErroMessage responseBody = testClient
@@ -182,7 +182,7 @@ public class UserIT {
     }
 
     @Test
-    public  void buscarUser_ComIdExistente_RetornarUserComStatus200(){
+    public void buscarUser_ComIdExistente_RetornarUserComStatus200() {
 
 
         UserCreateResponse responseBody = testClient
@@ -202,7 +202,7 @@ public class UserIT {
 
 
     @Test
-    public  void createUser_CoIdInexistente_RetornarErroMessageComStatus404(){
+    public void createUser_CoIdInexistente_RetornarErroMessageComStatus404() {
         UserCreateDTO createDTO = new UserCreateDTO("dady", "ailton@gmail.com", "123456");
 
         ErroMessage responseBody = testClient
@@ -219,10 +219,10 @@ public class UserIT {
     }
 
     @Test
-    public  void EditarSenha_ComDadosValidos_RetornarComStatus204(){
-        UserUpdatePasswordDTO updatePasswordDTO = new UserUpdatePasswordDTO("123456","123455","123455");
+    public void EditarSenha_ComDadosValidos_RetornarComStatus204() {
+        UserUpdatePasswordDTO updatePasswordDTO = new UserUpdatePasswordDTO("123456", "123455", "123455");
 
-         testClient
+        testClient
                 .put()
                 .uri("/api/v1/users/100/update-password")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -231,7 +231,109 @@ public class UserIT {
                 .expectStatus().isNoContent();
 
 
+    }
+
+    @Test
+    public void EditarSenha_ComIdInexistente_RetornarErroMessageComStatus404() {
+        UserUpdatePasswordDTO updatePasswordDTO = new UserUpdatePasswordDTO("123456", "123455", "123455");
+        ErroMessage responseBody = testClient
+                .put()
+                .uri("/api/v1/users/107/update-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(updatePasswordDTO)
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(ErroMessage.class)
+                .returnResult().getResponseBody();
+
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(404);
+
+
+    }
+
+    @Test
+    public void EditarSenha_ComCamposInvalido_RetornarErroMessageComStatus422() {
+        UserUpdatePasswordDTO updatePasswordDTO = new UserUpdatePasswordDTO("", "", "");
+        ErroMessage responseBody = testClient
+                .put()
+                .uri("/api/v1/users/100/update-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(updatePasswordDTO)
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErroMessage.class)
+                .returnResult().getResponseBody();
+
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+
+        responseBody = testClient
+                .put()
+                .uri("/api/v1/users/100/update-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UserUpdatePasswordDTO("12345", "12345", "12345"))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErroMessage.class)
+                .returnResult().getResponseBody();
+
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+
+        responseBody = testClient
+                .put()
+                .uri("/api/v1/users/100/update-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UserUpdatePasswordDTO("1234567", "1234567", "1234567"))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErroMessage.class)
+                .returnResult().getResponseBody();
+
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+    }
+
+
+    @Test
+    public void EditarSenha_ComSenhasInvalido_RetornarErroMessageComStatus400() {
+        UserUpdatePasswordDTO updatePasswordDTO = new UserUpdatePasswordDTO("123456", "123455", "123444");
+        ErroMessage responseBody = testClient
+                .put()
+                .uri("/api/v1/users/100/update-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(updatePasswordDTO)
+                .exchange()
+                .expectStatus().isEqualTo(400)
+                .expectBody(ErroMessage.class)
+                .returnResult().getResponseBody();
+
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(400);
+
+
+        responseBody = testClient
+                .put()
+                .uri("/api/v1/users/100/update-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UserUpdatePasswordDTO("123455", "123456", "123456"))
+                .exchange()
+                .expectStatus().isEqualTo(400)
+                .expectBody(ErroMessage.class)
+                .returnResult().getResponseBody();
+
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(400);
 
     }
 }
-
