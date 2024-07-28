@@ -2,6 +2,7 @@ package com.dev.hakeem.nextcash;
 
 import com.dev.hakeem.nextcash.web.exception.ErroMessage;
 import com.dev.hakeem.nextcash.web.request.UserCreateDTO;
+import com.dev.hakeem.nextcash.web.request.UserUpdatePasswordDTO;
 import com.dev.hakeem.nextcash.web.response.UserCreateResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -214,6 +215,22 @@ public class UserIT {
 
         org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
         org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(404);
+
+    }
+
+    @Test
+    public  void EditarSenha_ComDadosValidos_RetornarComStatus204(){
+        UserUpdatePasswordDTO updatePasswordDTO = new UserUpdatePasswordDTO("123456","123455","123455");
+
+         testClient
+                .put()
+                .uri("/api/v1/users/100/update-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(updatePasswordDTO)
+                .exchange()
+                .expectStatus().isNoContent();
+
+
 
     }
 }
