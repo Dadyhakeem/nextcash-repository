@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserUpdatePasswordDTO {
 
-    private Long id;
+
 
     @NotBlank(message = "Current password cannot be blank")
     private String currentPassword;
@@ -23,4 +23,5 @@ public class UserUpdatePasswordDTO {
 
     @NotBlank(message = "Confirm password cannot be blank")
     private String confirmPassword;
+
 }

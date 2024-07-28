@@ -69,9 +69,9 @@ public class UserController {
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErroMessage.class)))
             })
     @PutMapping("{id}/update-password")
-    public ResponseEntity<Void> atualizarSenha(@Valid @RequestBody UserUpdatePasswordDTO updatePasswordDTO) {
+    public ResponseEntity<Void> atualizarSenha(@Valid @RequestBody UserUpdatePasswordDTO update, @PathVariable Long id) {
         try {
-            service.atualizarSenha(updatePasswordDTO);
+           User user = service.atualizarSenha(id,update.getCurrentPassword(),update.getNewPassword(),update.getConfirmPassword());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (BusinessException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);

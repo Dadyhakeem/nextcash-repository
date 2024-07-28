@@ -39,19 +39,16 @@ public class UserService {
 
     }
 
-    public User atualizarSenha(UserUpdatePasswordDTO updatePasswordDTO) {
-
-        User user = repository.findById(updatePasswordDTO.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
-        if (!updatePasswordDTO.getCurrentPassword().equals(user.getPassword())) {
-            throw new PasswordInvalidException("Sua senha não confere");
-        }
-        if (!updatePasswordDTO.getNewPassword().equals(updatePasswordDTO.getConfirmPassword())) {
+    public User atualizarSenha(Long id,String CurrentPassword,String NewPassword , String ConfirmPassword) {
+        if (!NewPassword.equals(ConfirmPassword)){
             throw new PasswordInvalidException("Nova senha não confere com a confirmação de senha");
         }
-        user.setPassword(updatePasswordDTO.getNewPassword());
-
-        return repository.save(user);
+       User user = buscarPorId(id);
+        if (!user.getPassword().equals(CurrentPassword)){
+            throw new PasswordInvalidException("Sua senha não confere");
+        }
+       user.setPassword(NewPassword);
+       return user;
     }
 
 
