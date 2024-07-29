@@ -18,6 +18,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -70,7 +71,8 @@ public class UserController {
                     @ApiResponse(responseCode = "422", description = "Campos invalidos ou mal formatados",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErroMessage.class)))
             })
-    @PutMapping("{id}/update-password")
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')AND (#id == authentication.principal.id)")
     public ResponseEntity<Void> atualizarSenha(@Valid @RequestBody UserUpdatePasswordDTO update, @PathVariable Long id) {
 
            User user = service.atualizarSenha(id,update.getCurrentPassword(),update.getNewPassword(),update.getConfirmPassword());
@@ -84,6 +86,7 @@ public class UserController {
                                     array = @ArraySchema(schema = @Schema(implementation = UserCreateResponse.class)))),
             })
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserCreateResponse>> listarTodos() {
         List<User> usuarios = service.listarTodos();
         List<UserCreateResponse> response = usuarios.stream().map(mapper::ResponseUserTO).collect(Collectors.toList());
@@ -100,6 +103,7 @@ public class UserController {
             })
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')OR (hasRole('CLIENT')AND #id == authentication.principal.id)")
     public ResponseEntity<UserCreateResponse> buscarPorId(@Valid @PathVariable Long id) {
         try {
             User user = service.buscarPorId(id);

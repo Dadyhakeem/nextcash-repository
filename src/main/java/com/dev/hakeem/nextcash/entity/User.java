@@ -8,6 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -18,6 +21,7 @@ import java.util.Objects;
 @AllArgsConstructor @NoArgsConstructor
 @Entity
 @Table(name = "tb_users")
+@EntityListeners(AuditingEntityListener.class)
 public class User implements Serializable {
     private static final long serialversion= 1L;
 
@@ -32,13 +36,15 @@ public class User implements Serializable {
     @Column(name = "email",nullable = false,unique = true, length = 100)
     private  String email;
     @Column(name = "Password",nullable = false)
-    @Size(min = 6,max = 6,message = "as senha nao pode ultrapassar 6 digitos")
+    @Size(min = 6,max = 100,message = "as senha nao pode ultrapassar 6 digitos")
     private String password;
      @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role = Role.ROLE_CLIENT;
+     @CreatedDate
     @Column(name = "created_at")
     private Timestamp created_at;
+     @LastModifiedDate
     @Column(name = "updated_at")
     private  Timestamp updated_at;
 
