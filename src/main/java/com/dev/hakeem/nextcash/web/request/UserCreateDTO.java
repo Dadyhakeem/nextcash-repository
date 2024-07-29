@@ -25,7 +25,7 @@ public class UserCreateDTO {
     private String email;
 
     @NotBlank(message = "Password cannot be blank")
-    @Size(min = 6, max = 6, message = "Password must be exactly 6 characters long")
+    @Size(min = 6, max = 100, message = "Password must be exactly 6 characters long")
     private String password;
 }
 
