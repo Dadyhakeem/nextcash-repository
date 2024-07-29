@@ -1,6 +1,7 @@
 package com.dev.hakeem.nextcash.service;
 
 import com.dev.hakeem.nextcash.entity.User;
+import com.dev.hakeem.nextcash.enums.Role;
 import com.dev.hakeem.nextcash.exception.EmailUniqueViolationExeption;
 import com.dev.hakeem.nextcash.exception.EntityNotFoundException;
 import com.dev.hakeem.nextcash.exception.PasswordInvalidException;
@@ -9,6 +10,7 @@ import com.dev.hakeem.nextcash.web.exception.BusinessException;
 import com.dev.hakeem.nextcash.web.request.UserCreateDTO;
 import com.dev.hakeem.nextcash.web.request.UserUpdatePasswordDTO;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -70,5 +72,13 @@ public class UserService {
           repository.deleteById(id);
     }
 
-
+    @Transactional(readOnly = true)
+    public User BuscarPorEmail(String email) {
+        return repository.findByEmail(email)
+                .orElseThrow(()-> new EntityNotFoundException(String.format("Usario com 'email' nao encontrado",email)));
+    }
+    @Transactional(readOnly = true)
+    public Role BuscarPorRoleByEmail(String email) {
+        return repository.finRoleByEmail(email);
+    }
 }
