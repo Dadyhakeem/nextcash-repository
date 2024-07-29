@@ -19,7 +19,7 @@ public class jwtUtils {
 
     public static  final String JWT_BEARER = "Bearer";
 
-    public static final String JWT_AUTHENTICATION = "Authentication";
+    public static final String JWT_AUTHORIZATION = "Authorization";
 
     public static final  String SECRET_KEY = "123456789-23456789-123456789";
 
@@ -75,7 +75,11 @@ public class jwtUtils {
 
      }
 
-     public static boolean getemailFromToken(String token){
+    public static String getUEmailFromToken(String token){
+        return getClaimsFromToken(token).getSubject();
+    }
+
+     public static boolean istokenvalid(String token){
          try{
               Jwts.parser()
                      .setSigningKey(genaratekey()).build()

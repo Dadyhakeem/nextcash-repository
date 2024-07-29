@@ -27,6 +27,8 @@ public class AuthenticationController {
     private static final Logger log = LoggerFactory.getLogger(AuthenticationController.class);
     private final JwtUserDetailsService service;
     private final AuthenticationManager manager;
+
+
     @PostMapping("/auth")
     public ResponseEntity<?> authenticar(@Valid @RequestBody UserLoginDTO loginDTO, HttpServletRequest request){
         log.info("processo de authenticacao pelo login {}",loginDTO.getEmail());

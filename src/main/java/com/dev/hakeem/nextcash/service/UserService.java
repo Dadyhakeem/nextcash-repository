@@ -9,6 +9,8 @@ import com.dev.hakeem.nextcash.repository.UserRepository;
 import com.dev.hakeem.nextcash.web.exception.BusinessException;
 import com.dev.hakeem.nextcash.web.request.UserCreateDTO;
 import com.dev.hakeem.nextcash.web.request.UserUpdatePasswordDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,9 +22,11 @@ public class UserService {
 
 
     private  final UserRepository repository;
-
-    public UserService(UserRepository repository) {
+    private final PasswordEncoder encoder;
+    @Autowired
+    public UserService(UserRepository repository, PasswordEncoder encoder) {
         this.repository = repository;
+        this.encoder = encoder;
     }
 
     public User cadastrar(User createDTO){
@@ -32,7 +36,7 @@ public class UserService {
           User user = new User();
           user.setEmail(createDTO.getEmail());
           user.setUsername(createDTO.getUsername());
-          user.setPassword(createDTO.getPassword());
+          user.setPassword(encoder.encode(createDTO.getPassword()));
           return repository.save(user);
       }catch (org.springframework.dao.DataIntegrityViolationException ex){
           throw  new EmailUniqueViolationExeption(String.format("Email  {%s} já cadastrado", createDTO.getEmail()));
@@ -46,10 +50,10 @@ public class UserService {
             throw new PasswordInvalidException("Nova senha não confere com a confirmação de senha");
         }
        User user = buscarPorId(id);
-        if (!user.getPassword().equals(CurrentPassword)){
+        if (encoder.matches(CurrentPassword,user.getPassword())){
             throw new PasswordInvalidException("Sua senha não confere");
         }
-       user.setPassword(NewPassword);
+       user.setPassword(encoder.encode(NewPassword));
        return user;
     }
 
