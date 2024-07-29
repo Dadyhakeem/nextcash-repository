@@ -1,5 +1,6 @@
 package com.dev.hakeem.nextcash.config;
 
+import com.dev.hakeem.nextcash.jwt.JwtAuthenticationEntryPoint;
 import com.dev.hakeem.nextcash.jwt.JwtAuthorizationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +18,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableMethodSecurity
 @Configuration
 @EnableWebMvc
-public class SpringSecurityConfig {
+public class SpringSecurityConfig  {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -34,6 +35,8 @@ public class SpringSecurityConfig {
                 ).addFilterBefore(
                         jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class
 
+                ).exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                 ).build();
     }
 
