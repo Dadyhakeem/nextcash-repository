@@ -6,6 +6,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,20 +16,23 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
+import static org.springframework.cache.interceptor.SimpleKeyGenerator.generateKey;
+
+@Slf4j
 public class jwtUtils {
 
     public static  final String JWT_BEARER = "Bearer";
 
     public static final String JWT_AUTHORIZATION = "Authorization";
 
-    public static final  String SECRET_KEY = "123456789-23456789-123456789";
+    public static final  String SECRET_KEY = "0123456789-0123456789-0123456789";
 
     public static final long EXPIRE_DAY = 0;
 
-    public static final long EXPIRE_HOURES = 0;
+    public static final long EXPIRE_HOURS = 0;
 
-    public static final  long EXPIRE_MINUTES = 2;
-    private static final Logger log = LoggerFactory.getLogger(jwtUtils.class);
+    public static final  long EXPIRE_MINUTES = 30;
+    //private static final Logger log = LoggerFactory.getLogger(jwtUtils.class);
 
     private  jwtUtils (){
 
@@ -39,7 +43,7 @@ public class jwtUtils {
 
      private static Date toExpireDate(Date start){
          LocalDateTime localDate = start.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-         LocalDateTime end = localDate.plusDays(EXPIRE_DAY).minusHours(EXPIRE_HOURES).plusMinutes(EXPIRE_MINUTES);
+         LocalDateTime end = localDate.plusDays(EXPIRE_DAY).minusHours(EXPIRE_HOURS).plusMinutes(EXPIRE_MINUTES);
          return  Date.from(end.atZone(ZoneId.systemDefault()).toInstant());
      }
 
@@ -52,7 +56,7 @@ public class jwtUtils {
                  .setSubject(email)
                  .setIssuedAt(issueAt)
                  .setExpiration(limit)
-                 .signWith(genaratekey(), SignatureAlgorithm.ES256)
+                 .signWith(genaratekey(),SignatureAlgorithm.HS256)
                  .claim("role",role)
                  .compact();
 
@@ -62,18 +66,16 @@ public class jwtUtils {
 
      }
 
-     private  static Claims getClaimsFromToken(String token){
-        try{
-            return Jwts.parser()
+    private static Claims getClaimsFromToken(String token) {
+        try {
+            return Jwts.parserBuilder()
                     .setSigningKey(genaratekey()).build()
                     .parseClaimsJws(refactorToken(token)).getBody();
-        }catch (JwtException e){
-            log.error(String.format("Token invalido %s",e.getMessage()) );
+        } catch (JwtException ex) {
+            log.error(String.format("Token invalido %s", ex.getMessage()));
         }
-
         return null;
-
-     }
+    }
 
     public static String getUEmailFromToken(String token){
         return getClaimsFromToken(token).getSubject();
@@ -81,7 +83,7 @@ public class jwtUtils {
 
      public static boolean istokenvalid(String token){
          try{
-              Jwts.parser()
+              Jwts.parserBuilder()
                      .setSigningKey(genaratekey()).build()
                      .parseClaimsJws(refactorToken(token));
              return true;
