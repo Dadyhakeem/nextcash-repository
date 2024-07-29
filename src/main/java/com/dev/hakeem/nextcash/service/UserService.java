@@ -50,7 +50,7 @@ public class UserService {
             throw new PasswordInvalidException("Nova senha não confere com a confirmação de senha");
         }
        User user = buscarPorId(id);
-        if (encoder.matches(CurrentPassword,user.getPassword())){
+        if (!encoder.matches(CurrentPassword,user.getPassword())){
             throw new PasswordInvalidException("Sua senha não confere");
         }
        user.setPassword(encoder.encode(NewPassword));
@@ -83,6 +83,6 @@ public class UserService {
     }
     @Transactional(readOnly = true)
     public Role BuscarPorRoleByEmail(String email) {
-        return repository.finRoleByEmail(email);
+        return repository.findRoleByEmail(email);
     }
 }
