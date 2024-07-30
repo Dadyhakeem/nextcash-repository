@@ -66,6 +66,82 @@ public class AuthenticacaoIT {
 
 
 
+    @Test
+    public void autenticar_ComUsernameInvalido_RetornarErrorMessageStatus422() {
+        ErroMessage responseBody = testClient
+                .post()
+                .uri("/api/v1/auth")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UserLoginDTO("", "123456"))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErroMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+        responseBody = testClient
+                .post()
+                .uri("/api/v1/auth")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UserLoginDTO("@email.com", "123456"))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErroMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+    }
+
+
+    @Test
+    public void autenticar_ComPasswordInvalido_RetornarErrorMessageStatus422() {
+        ErroMessage responseBody = testClient
+                .post()
+                .uri("/api/v1/auth")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UserLoginDTO("amor@gmail.com", ""))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErroMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+        responseBody = testClient
+                .post()
+                .uri("/api/v1/auth")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UserLoginDTO("amor@gmail.com", "123"))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErroMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+      /*  responseBody = testClient
+                .post()
+                .uri("/api/v1/auth")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UserLoginDTO("amor@gmail.com", "123456789"))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErroMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);*/
+    }
+
+
+
+
+
 
 
 }
