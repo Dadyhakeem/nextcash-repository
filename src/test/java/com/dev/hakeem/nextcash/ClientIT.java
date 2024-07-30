@@ -1,5 +1,6 @@
 package com.dev.hakeem.nextcash;
 
+import com.dev.hakeem.nextcash.web.exception.ErroMessage;
 import com.dev.hakeem.nextcash.web.request.ClientResquest;
 import com.dev.hakeem.nextcash.web.response.ClientResp;
 import org.junit.jupiter.api.Test;
@@ -36,5 +37,91 @@ public class ClientIT {
         org.assertj.core.api.Assertions.assertThat(responseBody.getCpf()).isEqualTo("82044878003");
     }
 
+    @Test
+    public  void criarCliente_ComCPFCadastrado_retornErroMessageComStatus409(){
+        ErroMessage responseBody = testClient
+                .post()
+                .uri("/api/v1/clientes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "user3@gmail.com", "123456"))
+                .bodyValue(new ClientResquest("Ciro Gastao", "52843644062"))
+                .exchange()
+                .expectStatus().isEqualTo(409)
+                .expectBody(ErroMessage.class)
+                .returnResult().getResponseBody();
 
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(409);
+
+    }
+
+
+    @Test
+    public  void criarCliente_ComdaosInvalidos_retornErroMessageComStatus422(){
+        ErroMessage responseBody = testClient
+                .post()
+                .uri("/api/v1/clientes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "user3@gmail.com", "123456"))
+                .bodyValue(new ClientResquest("", ""))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErroMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+
+        responseBody = testClient
+                .post()
+                .uri("/api/v1/clientes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "user3@gmail.com", "123456"))
+                .bodyValue(new ClientResquest("dady", "000000000000"))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErroMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+
+        responseBody = testClient
+                .post()
+                .uri("/api/v1/clientes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "user3@gmail.com", "123456"))
+                .bodyValue(new ClientResquest("dady", "82044878003"))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErroMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+
+
+
+    }
+
+
+    @Test
+    public  void criarCliente_ComUserNaoPermitido_retornErroMessageComStatus403() {
+        ErroMessage responseBody = testClient
+                .post()
+                .uri("/api/v1/clientes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "amor@gmail.com", "123456"))
+                .bodyValue(new ClientResquest("Ciro Gastao", "82044878003"))
+                .exchange()
+                .expectStatus().isEqualTo(403)
+                .expectBody(ErroMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
+
+    }
 }
