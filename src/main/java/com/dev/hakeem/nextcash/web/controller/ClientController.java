@@ -16,6 +16,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -71,6 +73,13 @@ public class ClientController {
     public  ResponseEntity<ClientResp> busacrPorId(@Valid @PathVariable Long id){
         Client client = service.buscarPorId(id);
        return ResponseEntity.ok(ClientMapper.toReponse(client));
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public  ResponseEntity<Page<Client>> busacrPorId(Pageable pageable){
+        Page<Client> client = service.buscartodos(pageable);
+        return ResponseEntity.ok(client);
     }
 
 }
