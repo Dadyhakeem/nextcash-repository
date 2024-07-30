@@ -76,9 +76,8 @@ public class UserController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')AND (#id == authentication.principal.id)")
     public ResponseEntity<Void> atualizarSenha(@Valid @RequestBody UserUpdatePasswordDTO update, @PathVariable Long id) {
-
            service.atualizarSenha(id,update.getCurrentPassword(),update.getNewPassword(),update.getConfirmPassword());
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "Listar todos os usuarios cadastrado", description = "Requisicao exige um bearer Token . Acess retrito a ADMIN",

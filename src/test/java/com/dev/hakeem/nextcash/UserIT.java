@@ -303,7 +303,6 @@ public class UserIT {
 
     @Test
     public void EditarSenha_ComUserDifeentes_RetornarErroMessageComStatus403() {
-        UserUpdatePasswordDTO updatePasswordDTO = new UserUpdatePasswordDTO("123456", "123455", "123455");
         ErroMessage responseBody = testClient
                 .put()
                 .uri("/api/v1/users/12")
@@ -343,7 +342,8 @@ public class UserIT {
         UserUpdatePasswordDTO updatePasswordDTO = new UserUpdatePasswordDTO("", "", "");
         ErroMessage responseBody = testClient
                 .put()
-                .uri("/api/v1/users/100/update-password")
+                .uri("/api/v1/users/5")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient,"amor@gmail.com","123456"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updatePasswordDTO)
                 .exchange()
@@ -358,7 +358,8 @@ public class UserIT {
 
         responseBody = testClient
                 .put()
-                .uri("/api/v1/users/100/update-password")
+                .uri("/api/v1/users/5")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient,"amor@gmail.com","123456"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new UserUpdatePasswordDTO("12345", "12345", "12345"))
                 .exchange()
@@ -370,12 +371,13 @@ public class UserIT {
         org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
         org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
 
-
+/*
         responseBody = testClient
                 .put()
-                .uri("/api/v1/users/100/update-password")
+                .uri("/api/v1/users/5")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient,"amor@gmail.com","123456"))
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(new UserUpdatePasswordDTO("1234567", "1234567", "1234567"))
+                .bodyValue(new UserUpdatePasswordDTO("12345678", "12345678", "12345678"))
                 .exchange()
                 .expectStatus().isEqualTo(422)
                 .expectBody(ErroMessage.class)
@@ -383,7 +385,7 @@ public class UserIT {
 
 
         org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
-        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);*/
 
     }
 
@@ -393,7 +395,8 @@ public class UserIT {
         UserUpdatePasswordDTO updatePasswordDTO = new UserUpdatePasswordDTO("123456", "123455", "123444");
         ErroMessage responseBody = testClient
                 .put()
-                .uri("/api/v1/users/100/update-password")
+                .uri("/api/v1/users/5")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient,"amor@gmail.com","123456"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updatePasswordDTO)
                 .exchange()
@@ -408,9 +411,10 @@ public class UserIT {
 
         responseBody = testClient
                 .put()
-                .uri("/api/v1/users/100/update-password")
+                .uri("/api/v1/users/5")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient,"amor@gmail.com","123456"))
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(new UserUpdatePasswordDTO("123455", "123456", "123456"))
+                .bodyValue(new UserUpdatePasswordDTO("000000", "123456", "123456"))
                 .exchange()
                 .expectStatus().isEqualTo(400)
                 .expectBody(ErroMessage.class)

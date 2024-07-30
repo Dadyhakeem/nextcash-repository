@@ -35,8 +35,7 @@ public class User implements Serializable {
     @Email(message = "Formato do email esta invalido",regexp = "^[a-z0-9.+-]+@[a-z0-9.-]+\\.[a-z]{2,}$")
     @Column(name = "email",nullable = false,unique = true, length = 100)
     private  String email;
-    @Column(name = "Password",nullable = false)
-    @Size(min = 6,max = 100,message = "as senha nao pode ultrapassar 6 digitos")
+    @Column(name = "Password",nullable = false, length = 200)
     private String password;
      @Enumerated(EnumType.STRING)
     @Column(name = "role")
