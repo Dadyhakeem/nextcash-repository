@@ -1,5 +1,6 @@
 package com.dev.hakeem.nextcash.web.exception;
 
+import com.dev.hakeem.nextcash.exception.CpfUniqueViolationExeption;
 import com.dev.hakeem.nextcash.exception.EmailUniqueViolationExeption;
 import com.dev.hakeem.nextcash.exception.EntityNotFoundException;
 import com.dev.hakeem.nextcash.exception.PasswordInvalidException;
@@ -32,7 +33,7 @@ public class ApiExceptionHandler {
 
 
 
-    @ExceptionHandler(EmailUniqueViolationExeption.class)
+    @ExceptionHandler({EmailUniqueViolationExeption.class ,CpfUniqueViolationExeption.class})
     public ResponseEntity<ErroMessage> EmailUniqueViolationExeption(RuntimeException ex,
                                                                        HttpServletRequest request
                                                                        ){
