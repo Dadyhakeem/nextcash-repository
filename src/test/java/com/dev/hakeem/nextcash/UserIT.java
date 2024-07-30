@@ -278,13 +278,23 @@ public class UserIT {
 
     @Test
     public void EditarSenha_ComDadosValidos_RetornarComStatus204() {
-        UserUpdatePasswordDTO updatePasswordDTO = new UserUpdatePasswordDTO("123456", "123455", "123455");
 
         testClient
                 .put()
-                .uri("/api/v1/users/100/update-password")
+                .uri("/api/v1/users/5")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient,"amor@gmail.com","123456"))
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(updatePasswordDTO)
+                .bodyValue(new UserUpdatePasswordDTO("123456", "123455", "123455"))
+                .exchange()
+                .expectStatus().isNoContent();
+
+
+        testClient
+                .put()
+                .uri("/api/v1/users/11")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient,"user1@gmail.com","123456"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UserUpdatePasswordDTO("123456", "123455", "123455"))
                 .exchange()
                 .expectStatus().isNoContent();
 
@@ -292,21 +302,38 @@ public class UserIT {
     }
 
     @Test
-    public void EditarSenha_ComIdInexistente_RetornarErroMessageComStatus404() {
+    public void EditarSenha_ComUserDifeentes_RetornarErroMessageComStatus403() {
         UserUpdatePasswordDTO updatePasswordDTO = new UserUpdatePasswordDTO("123456", "123455", "123455");
         ErroMessage responseBody = testClient
                 .put()
-                .uri("/api/v1/users/107/update-password")
+                .uri("/api/v1/users/12")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient,"amor@gmail.com","123456"))
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(updatePasswordDTO)
+                .bodyValue(new UserUpdatePasswordDTO("123456", "123455", "123455"))
                 .exchange()
-                .expectStatus().isNotFound()
+                .expectStatus().isForbidden()
                 .expectBody(ErroMessage.class)
                 .returnResult().getResponseBody();
 
 
         org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
-        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(404);
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
+
+
+        responseBody = testClient
+                .put()
+                .uri("/api/v1/users/12")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient,"user1@gmail.com","123456"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UserUpdatePasswordDTO("123456", "123455", "123455"))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody(ErroMessage.class)
+                .returnResult().getResponseBody();
+
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
 
 
     }

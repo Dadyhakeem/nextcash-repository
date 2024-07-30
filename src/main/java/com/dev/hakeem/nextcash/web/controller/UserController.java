@@ -65,12 +65,9 @@ public class UserController {
     @Operation(summary = "Atualizar senha", description = " Requisicao exige um bearer Token . Acess restrito a ADMIN/CLIENT",
             security = @SecurityRequirement(name = "security"),
             responses = {
-                    @ApiResponse(responseCode = "204",description = "Senha atualizada com sucesso",
-                            content = @Content(mediaType = "application/json",schema = @Schema(implementation = Void.class))),
+                    @ApiResponse(responseCode = "204",description = "Senha atualizada com sucesso"),
                     @ApiResponse(responseCode = "400",description = "Senha nao confere",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class))),
-                    @ApiResponse(responseCode = "404", description = "Recursos nao encontrado",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErroMessage.class))),
                     @ApiResponse(responseCode = "403", description = "Usuário sem permissão para acessar este recurso",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
                     @ApiResponse(responseCode = "422", description = "Campos invalidos ou mal formatados",
@@ -80,7 +77,7 @@ public class UserController {
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')AND (#id == authentication.principal.id)")
     public ResponseEntity<Void> atualizarSenha(@Valid @RequestBody UserUpdatePasswordDTO update, @PathVariable Long id) {
 
-           User user = service.atualizarSenha(id,update.getCurrentPassword(),update.getNewPassword(),update.getConfirmPassword());
+           service.atualizarSenha(id,update.getCurrentPassword(),update.getNewPassword(),update.getConfirmPassword());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
