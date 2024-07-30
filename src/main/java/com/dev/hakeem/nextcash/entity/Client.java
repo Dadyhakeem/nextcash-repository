@@ -9,10 +9,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -35,12 +38,12 @@ private  static  final long serialverion = 1L;
     @OneToOne
     @JoinColumn(name = "userid",nullable = false)
     private User user;
-    @CreatedBy
+    @CreatedDate
     @Column(name = "createdAt")
-    private LocalDateTime createdAt;
-    @LastModifiedBy
+    private Timestamp createdAt;
+    @LastModifiedDate
     @Column(name = "updateddAt")
-    private LocalDateTime updateddAt;
+    private Timestamp updateddAt;
 
 
     @Override
