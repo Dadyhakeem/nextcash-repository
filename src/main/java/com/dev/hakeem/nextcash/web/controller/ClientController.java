@@ -19,10 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 @Tag(name = "Client", description = "Contem todos as operacoes relativas aos recursos para criar um novo cliente , edition e leitura de um client.")
 @RestController
 @RequestMapping("/api/v1/clientes")
@@ -37,7 +35,7 @@ public class ClientController {
     }
 
     @Operation(summary = "Criar um novo cliente", description = "Recurso para criar um novo cliente vinculado a um user cadastrada. "+
-            "Requisicao exi use de um bearer token. Acesso restrito a Role='Cliente",
+            "Requisicao exige use de um bearer token. Acesso restrito a Role='CLIENT",
             responses = {
                     @ApiResponse(responseCode = "201",description = "Recurso criado com sucesso",
                             content = @Content(mediaType = "application/json;charset=UTF-8",schema = @Schema(implementation = UserCreateResponse.class))),
@@ -57,4 +55,22 @@ public class ClientController {
         service.salvar(client);
         return  ResponseEntity.status(201).body(ClientMapper.toReponse(client));
     }
+
+    @Operation(summary = "Localizar um cliente", description = "Recurso para localizar pelo ID. "+
+            "Requisicao exige use de um bearer token. Acesso restrito a Role='ADMIN",
+            responses = {
+                    @ApiResponse(responseCode = "200",description = "Recurso localizado com sucesso",
+                            content = @Content(mediaType = "application/json;charset=UTF-8",schema = @Schema(implementation = UserCreateResponse.class))),
+                    @ApiResponse(responseCode = "404",description = "Client nao encontrado",
+                            content = @Content(mediaType = "application/json;charset=UTF-8",schema = @Schema(implementation = ErroMessage.class))),
+                    @ApiResponse(responseCode = "403", description = "Recurso nao permite perfil de CLIENT",
+                            content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErroMessage.class)))
+            })
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public  ResponseEntity<ClientResp> busacrPorId(@Valid @PathVariable Long id){
+        Client client = service.buscarPorId(id);
+       return ResponseEntity.ok(ClientMapper.toReponse(client));
+    }
+
 }

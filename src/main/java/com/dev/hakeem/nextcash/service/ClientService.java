@@ -2,6 +2,7 @@ package com.dev.hakeem.nextcash.service;
 
 import com.dev.hakeem.nextcash.entity.Client;
 import com.dev.hakeem.nextcash.exception.CpfUniqueViolationExeption;
+import com.dev.hakeem.nextcash.exception.EntityNotFoundException;
 import com.dev.hakeem.nextcash.repository.ClientRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,8 @@ public class ClientService {
     }
 
 
-
-
+    public Client buscarPorId(Long id) {
+        return repository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException(String.format("Cliente id = %s nao encontrada no sistema",id)));
+    }
 }

@@ -124,4 +124,21 @@ public class ClientIT {
         org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
 
     }
+
+
+    @Test
+    public  void buscarClient_ComIdExistentePeloADMIN_retornarClienteComStatus200(){
+        ClientResp responseBody = testClient
+                .get()
+                .uri("/api/v1/clientes/14")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "amor@gmail.com", "123456"))
+                .exchange()
+                .expectBody(ClientResp.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getId()).isEqualTo(14);
+
+    }
+
 }
