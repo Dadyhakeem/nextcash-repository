@@ -141,4 +141,38 @@ public class ClientIT {
 
     }
 
+
+    @Test
+    public  void buscarClient_ComIdInExistentePeloADMIN_retornarErroMessageComStatus404(){
+        ErroMessage responseBody = testClient
+                .get()
+                .uri("/api/v1/clientes/0")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "amor@gmail.com", "123456"))
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(ErroMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(404);
+
+    }
+
+
+    @Test
+    public  void buscarClient_ComIdExistentePeloCLIENT_retornarErroMessageComStatus403(){
+        ErroMessage responseBody = testClient
+                .get()
+                .uri("/api/v1/clientes/14")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "user1@gmail.com", "123456"))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody(ErroMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
+
+    }
+
 }
