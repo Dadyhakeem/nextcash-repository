@@ -26,5 +26,5 @@ public class ClientResquest {
     @CPF
     private String cpf;
 
-    private Long user;
+
 }

@@ -22,7 +22,7 @@ import java.util.Objects;
 @Setter @Getter
 @AllArgsConstructor @NoArgsConstructor
 @Entity
-@Table(name = "clients")
+@Table(name = "clientes")
 @EntityListeners(AuditingEntityListener.class)
 public class Client implements Serializable {
 private  static  final long serialverion = 1L;
