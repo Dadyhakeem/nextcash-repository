@@ -4,7 +4,9 @@ import com.dev.hakeem.nextcash.web.exception.ErroMessage;
 import com.dev.hakeem.nextcash.web.request.UserCreateDTO;
 import com.dev.hakeem.nextcash.web.request.UserUpdatePasswordDTO;
 import com.dev.hakeem.nextcash.web.response.UserCreateResponse;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springdoc.api.ErrorMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -432,7 +434,7 @@ public class UserIT {
         List<UserCreateResponse> responseBody = testClient
                 .get()
                 .uri("/api/v1/users")
-
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient,"amor@gmail.com","123456"))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(UserCreateResponse.class)
@@ -443,4 +445,21 @@ public class UserIT {
         org.assertj.core.api.Assertions.assertThat(responseBody.size()).isEqualTo(3);
 
     }
+
+
+    @Test
+    public void listarUsuarios_ComUsuarioSemPermissao_RetornarErrorMessageComStatus403() {
+        ErroMessage responseBody = testClient
+                .get()
+                .uri("/api/v1/users")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "user1@gmail.com", "123456"))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody(ErroMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
+    }
+
 }
