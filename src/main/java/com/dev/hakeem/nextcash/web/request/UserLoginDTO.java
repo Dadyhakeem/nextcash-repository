@@ -19,6 +19,6 @@ public class UserLoginDTO {
     private  String email;
 
     @NotBlank
-    @Size(min = 6, max = 100, message = "Password must be exactly 6 characters long")
+    @Size(min = 6, max = 6, message = "Password must be exactly 6 characters long")
     private String password;
 }

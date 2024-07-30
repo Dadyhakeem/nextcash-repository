@@ -23,6 +23,7 @@ public class UserService {
 
     private  final UserRepository repository;
     private final PasswordEncoder encoder;
+
     @Autowired
     public UserService(UserRepository repository, PasswordEncoder encoder) {
         this.repository = repository;
@@ -44,7 +45,7 @@ public class UserService {
 
 
     }
-
+     @Transactional
     public User atualizarSenha(Long id,String CurrentPassword,String NewPassword , String ConfirmPassword) {
         if (!NewPassword.equals(ConfirmPassword)){
             throw new PasswordInvalidException("Nova senha não confere com a confirmação de senha");

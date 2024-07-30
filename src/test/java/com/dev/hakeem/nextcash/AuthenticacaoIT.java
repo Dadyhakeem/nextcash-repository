@@ -124,7 +124,7 @@ public class AuthenticacaoIT {
         org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
         org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
 
-      /*  responseBody = testClient
+        responseBody = testClient
                 .post()
                 .uri("/api/v1/auth")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -135,7 +135,7 @@ public class AuthenticacaoIT {
                 .returnResult().getResponseBody();
 
         org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
-        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);*/
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);
     }
 
 
