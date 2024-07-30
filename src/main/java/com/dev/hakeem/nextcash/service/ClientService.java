@@ -4,14 +4,12 @@ import com.dev.hakeem.nextcash.entity.Client;
 import com.dev.hakeem.nextcash.exception.CpfUniqueViolationExeption;
 import com.dev.hakeem.nextcash.exception.EntityNotFoundException;
 import com.dev.hakeem.nextcash.repository.ClientRepository;
+import com.dev.hakeem.nextcash.repository.projection.ClienteProjection;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
-import java.util.List;
 
 @Service
 public class ClientService {
@@ -38,7 +36,7 @@ public class ClientService {
                 .orElseThrow(()-> new EntityNotFoundException(String.format("Cliente id = %s nao encontrada no sistema",id)));
     }
     @Transactional(readOnly = true)
-    public Page<Client> buscartodos(Pageable pageable) {
-        return repository.findAll((org.springframework.data.domain.Pageable) pageable);
+    public Page<ClienteProjection> buscartodos(Pageable pageable) {
+        return repository.findAllPage(pageable);
     }
 }

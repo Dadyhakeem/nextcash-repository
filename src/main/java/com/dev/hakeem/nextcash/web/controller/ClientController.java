@@ -2,11 +2,14 @@ package com.dev.hakeem.nextcash.web.controller;
 
 import com.dev.hakeem.nextcash.entity.Client;
 import com.dev.hakeem.nextcash.jwt.JwtUserDetails;
+import com.dev.hakeem.nextcash.repository.projection.ClienteProjection;
 import com.dev.hakeem.nextcash.service.ClientService;
 import com.dev.hakeem.nextcash.service.UserService;
 import com.dev.hakeem.nextcash.web.exception.ErroMessage;
 import com.dev.hakeem.nextcash.web.mapper.ClientMapper;
+import com.dev.hakeem.nextcash.web.mapper.PageableMapper;
 import com.dev.hakeem.nextcash.web.request.ClientResquest;
+import com.dev.hakeem.nextcash.web.request.PageableDTO;
 import com.dev.hakeem.nextcash.web.response.ClientResp;
 import com.dev.hakeem.nextcash.web.response.UserCreateResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -77,9 +80,9 @@ public class ClientController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public  ResponseEntity<Page<Client>> busacrPorId(Pageable pageable){
-        Page<Client> client = service.buscartodos(pageable);
-        return ResponseEntity.ok(client);
+    public  ResponseEntity<PageableDTO> busacrPorId(Pageable pageable){
+        Page<ClienteProjection> client = service.buscartodos(pageable);
+        return ResponseEntity.ok((PageableDTO) PageableMapper.toDTO(client));
     }
 
 }

@@ -21,7 +21,7 @@ import java.util.Objects;
 
 @Setter @Getter
 @AllArgsConstructor @NoArgsConstructor
-@Entity
+@Entity(name = "clientes")
 @Table(name = "clientes")
 @EntityListeners(AuditingEntityListener.class)
 public class Client implements Serializable {
