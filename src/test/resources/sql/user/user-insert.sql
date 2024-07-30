@@ -1,3 +1,3 @@
-insert into tb_users(id,email,username,password,role) values(100, 'dady@gmail.com', 'Dady', '123456', 'ROLE_ADMIN');
-insert into tb_users(id,email,username,password,role) values(101, 'ciro@gmail.com', 'Ciro', '123456', 'ROLE_CLIENT');
-insert into tb_users(id,email,username,password,role) values(102, 'taizy@gmail.com', 'Taizy', '123456', 'ROLE_CLIENT');
+insert into tb_users(id,email,username,password,role) values(5, 'amor@gmail.com', 'Dady', '$2a$10$BSpCrGtFdNeGR2/m5mYWG.vV41P2zcwljIjpGIYNMbrXCLpqYFxAa', 'ROLE_ADMIN');
+insert into tb_users(id,email,username,password,role) values(11, 'user1@gmail.com', 'Dady', '$2a$10$Xi9tPuWiKspBfQVP4AKTuO44mDr.OX0Mu7DikV5cdkQZbFL8Wco86', 'ROLE_CLIENT');
+insert into tb_users(id,email,username,password,role) values(12, 'user2@gmail.com', 'Dady', '$2a$10$ae7eyiYWBf9K8PyON1s38OMvh2vZEDtIro7Lv1v9ypf6Gl/TW3O/e', 'ROLE_CLIENT');
