@@ -11,11 +11,13 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,6 +37,7 @@ public class IncomeController {
 
 
     @Operation(summary = "Criar Income",description = "criar Income",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "201", description = "Income criada com sucesso",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = IncomeResponse.class))),
@@ -42,6 +45,7 @@ public class IncomeController {
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErroMessage.class)))
             })
     @PostMapping
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<IncomeResponse> createIncome(@Valid @RequestBody IncomeRequest request){
         Income income = service.createIncome(request);
         IncomeResponse response = mapper.toResponse(income);
@@ -50,12 +54,14 @@ public class IncomeController {
 
 
     @Operation(summary = "Listar todos os Income",description = "Recurso pra listar todos os Income",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "200",description = "Todas os Income criados",
                             content = @Content(mediaType = "application/json",
                                     array  = @ArraySchema(schema = @Schema(implementation = IncomeResponse.class)))),
             })
     @GetMapping
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<List<IncomeResponse>> listarTodos(){
         List<Income> income = service.listarTodos();
         List<IncomeResponse> response = income.stream().map(mapper::toResponse).collect(Collectors.toList());
@@ -63,6 +69,7 @@ public class IncomeController {
     }
 
     @Operation(summary = "Deletar Icome pelo id",description = "deletar Income pelo id",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "204",description = "Income deletada com sucesso",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = Void.class))),
@@ -70,6 +77,7 @@ public class IncomeController {
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
             })
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
     public  ResponseEntity<Void> deletarPorId(@PathVariable Long id){
         service.deletarPorId(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -77,6 +85,7 @@ public class IncomeController {
 
 
     @Operation(summary = "Recuperar Income pelo id",description = "Recuperar income pelo id",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "200",description = "Income recuperado com sucesso",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = IncomeResponse.class))),
@@ -84,6 +93,7 @@ public class IncomeController {
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
             })
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
     public  ResponseEntity<IncomeResponse>buscarPorId(@PathVariable Long id){
         Income income = service.buscarPorId(id);
         IncomeResponse response = mapper.toResponse(income);
@@ -91,6 +101,7 @@ public class IncomeController {
     }
 
     @Operation(summary = "Atualizar Income", description = " atualizar income",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "200",description = "Income atualizada com sucesso",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = IncomeResponse.class))),
@@ -100,6 +111,7 @@ public class IncomeController {
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErroMessage.class)))
             })
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
     public  ResponseEntity<IncomeResponse> editarIncome(@Valid @PathVariable Long id, @RequestBody IncomeRequest request){
         request.setId(id);
         Income income = service.editarIncome(request);

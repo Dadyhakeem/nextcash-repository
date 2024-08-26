@@ -3,12 +3,19 @@ package com.dev.hakeem.nextcash.web.mapper;
 import com.dev.hakeem.nextcash.entity.Account;
 import com.dev.hakeem.nextcash.entity.Expense;
 import com.dev.hakeem.nextcash.entity.Transaction;
+import com.dev.hakeem.nextcash.enums.CategoryExpense;
 import com.dev.hakeem.nextcash.exception.EntityNotFoundException;
 import com.dev.hakeem.nextcash.repository.*;
+import com.dev.hakeem.nextcash.web.exception.BusinessException;
+import com.dev.hakeem.nextcash.web.formatter.CartaoRequestConverter;
 import com.dev.hakeem.nextcash.web.request.ExpenseRequest;
 import com.dev.hakeem.nextcash.web.response.ExpensaResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 @Component
 public class ExpensaMapper {
@@ -28,16 +35,27 @@ public class ExpensaMapper {
     public Expense toRequest(ExpenseRequest request){
 
         Expense expense = new Expense();
-        expense.setId(request.getId());
         expense.setDescricao(request.getDescricao());
         expense.setAmount(request.getAmount());
-        expense.setCategoryExpense(request.getCategoryExpense());
+        try {
+            CategoryExpense categoryExpense = CategoryExpense.valueOf(request.getCategoryExpense());
+            expense.setCategoryExpense(categoryExpense);
+        }catch (IllegalArgumentException e ){
+            throw new BusinessException("Tipo de despesa nao existe : " + request.getCategoryExpense());
+        }
         Account acc = accountRepository.findById(request.getAccount())
                 .orElseThrow(()-> new EntityNotFoundException("Account   não encontrado"));
-        Transaction transaction = transsactionRepository.findById(request.getTransaction())
-                .orElseThrow(()-> new EntityNotFoundException("Transaction  não encontrado"));
+
         expense.setAccount(acc);
-        expense.setTransaction(transaction);
+        try{
+            LocalDate createdAt = LocalDate.parse(request.getCreatedAt());
+            expense.setCreatedAt(createdAt);
+        } catch (DateTimeParseException e) {
+            // Lida com o erro de parsing de data
+            throw new IllegalArgumentException("Formato de data inválido", e);
+        }
+
+
         return expense;
     }
 
@@ -47,6 +65,9 @@ public class ExpensaMapper {
         response.setDescricao(expense.getDescricao());
         response.setAmount(expense.getAmount());
         response.setCategoryExpense(expense.getCategoryExpense());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        response.setCreatedAt(LocalDate.parse(expense.getCreatedAt().format(formatter)));
+
 
 
         return response;

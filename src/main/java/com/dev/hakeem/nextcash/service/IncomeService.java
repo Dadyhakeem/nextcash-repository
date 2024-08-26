@@ -40,12 +40,10 @@ public class IncomeService {
         // Busca a conta e a transação associadas aos IDs fornecidos
         Account acc = accountRepository.findById(request.getAccount())
                 .orElseThrow(()-> new EntityNotFoundException("Account   não encontrado"));
-        Transaction transaction = transsactionRepository.findById(request.getTransaction())
-                .orElseThrow(()-> new EntityNotFoundException("Transaction  não encontrado"));
 
-        // Configura a receita com a conta e a transação
+
+        // a receita com a conta
         income.setAccount(acc);
-        income.setTransaction(transaction);
 
         // Credita o valor na conta
         creditar(acc, request.getAmount());
@@ -76,10 +74,7 @@ public class IncomeService {
         income.setCategoryIncome(request.getCategoryIncome());
         Account acc = accountRepository.findById(request.getAccount())
                 .orElseThrow(()-> new EntityNotFoundException("Account   não encontrado"));
-        Transaction transaction = transsactionRepository.findById(request.getTransaction())
-                .orElseThrow(()-> new EntityNotFoundException("Transaction  não encontrado"));
         income.setAccount(acc);
-        income.setTransaction(transaction);
         return repository.save(income);
     }
 

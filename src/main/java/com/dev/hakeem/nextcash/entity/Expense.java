@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -22,9 +23,7 @@ public class Expense {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "transactionId")
-    private Transaction transaction;
+
 
     @Enumerated(EnumType.STRING)
     @Column(name = "categoryExpense")
@@ -40,8 +39,8 @@ public class Expense {
     @JoinColumn(name = "accountId", nullable = false)
     private Account account;
 
-    @Column(name = "created_at", updatable = false)
-    private Timestamp createdAt;
+    @Column(name = "createdAt")
+    private LocalDate createdAt;
 
     @Column(name = "updated_at")
     private Timestamp updatedAt;

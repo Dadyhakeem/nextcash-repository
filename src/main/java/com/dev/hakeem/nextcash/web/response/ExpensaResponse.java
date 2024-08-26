@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,13 +20,14 @@ public class ExpensaResponse {
 
     private Long id;
 
-    @NotNull(message = "Categoria não pode ser nula")
+
     private CategoryExpense categoryExpense;
 
-    @NotNull(message = "Valor não pode ser nulo")
-    @Positive(message = "O valor deve ser positivo")
+
     private Double amount;
 
-    @NotBlank(message = "Descrição não pode ser vazia")
+
     private String descricao;
+
+    private LocalDate createdAt;
 }

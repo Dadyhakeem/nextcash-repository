@@ -18,14 +18,13 @@ public class IncomeResponse {
 
     private Long id;
 
-    @NotNull(message = "Categoria não pode ser nula")
+
 
     private CategoryIncome categoryIncome;
 
-    @NotNull(message = "Valor não pode ser nulo")
-    @Positive(message = "O valor deve ser positivo")
+
     private Double amount;
 
-    @NotBlank(message = "Descrição não pode ser vazia")
+
     private String descricao;
 }

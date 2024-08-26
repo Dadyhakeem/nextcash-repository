@@ -12,11 +12,13 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +38,7 @@ public class InvestimentController {
 
 
     @Operation(summary = "Criar investimento",description = "criar investimento",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "201", description = "investimento criada com sucesso",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = InvestmentResponse.class))),
@@ -43,6 +46,7 @@ public class InvestimentController {
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErroMessage.class)))
             })
     @PostMapping
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<InvestmentResponse> createInvestment(@Valid @RequestBody InvestmentRequest request){
         Investiment investiment = service.createInvestment(request);
         InvestmentResponse response = mapper.toResponse(investiment);
@@ -51,6 +55,7 @@ public class InvestimentController {
 
 
     @Operation(summary = "Atualizar invetimento", description = " atualizar invetimento",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "200",description = "invetimento atualizada com sucesso",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = InvestmentResponse.class))),
@@ -60,6 +65,7 @@ public class InvestimentController {
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErroMessage.class)))
             })
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
     public ResponseEntity<InvestmentResponse>atualizar(@PathVariable Long id,@RequestBody InvestmentRequest request){
         request.setId(id);
          Investiment investiment = service.atualizar(request);
@@ -69,12 +75,14 @@ public class InvestimentController {
 
 
     @Operation(summary = "Listar todos os invetimentos",description = "Recurso pra listar todos os invetimentos",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "200",description = "Todas os invetimentos criados",
                             content = @Content(mediaType = "application/json",
                                     array  = @ArraySchema(schema = @Schema(implementation = InvestmentResponse.class)))),
             })
     @GetMapping
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<List<InvestmentResponse>> listarTodos(){
          List<Investiment> investiments = service.listarTodos();
          List<InvestmentResponse> responses = investiments.stream().map(mapper::toResponse).collect(Collectors.toList());
@@ -83,6 +91,7 @@ public class InvestimentController {
 
 
     @Operation(summary = "Recuperar invetimento pelo id",description = "Recuperar invetimento pelo id",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "200",description = "invetimento recuperado com sucesso",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = InvestmentResponse.class))),
@@ -90,6 +99,7 @@ public class InvestimentController {
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
             })
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
     public ResponseEntity<InvestmentResponse>BuscarPorId(@PathVariable Long id){
          Investiment investiment = service.busrcarPorId(id);
          InvestmentResponse response = mapper.toResponse(investiment);
@@ -98,6 +108,7 @@ public class InvestimentController {
 
 
     @Operation(summary = "Deletar invetimento pelo id",description = "deletar invetimento pelo id",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "204",description = "invetimento deletada com sucesso",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = Void.class))),
@@ -105,6 +116,7 @@ public class InvestimentController {
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
             })
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
     public ResponseEntity<Void> deletarPorId(@PathVariable Long id){
          service.deletarPorId(id);
          return ResponseEntity.noContent().build();

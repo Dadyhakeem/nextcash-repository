@@ -12,11 +12,13 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,6 +37,7 @@ public class ExpenseController {
     }
 
     @Operation(summary = "Criar Expense",description = "criar Expense",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "201", description = "Expense criada com sucesso",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExpensaResponse.class))),
@@ -42,6 +45,7 @@ public class ExpenseController {
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErroMessage.class)))
             })
     @PostMapping
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<ExpensaResponse> createExpense(@Valid @RequestBody ExpenseRequest request){
         Expense expense = service.createExpense(request);
         ExpensaResponse response = mapper.toResponse(expense);
@@ -50,12 +54,14 @@ public class ExpenseController {
 
 
     @Operation(summary = "Listar todos os Expenses",description = "Recurso pra listar todos os Expenses",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "200",description = "Todas os Expenses criados",
                             content = @Content(mediaType = "application/json",
                                     array  = @ArraySchema(schema = @Schema(implementation = ExpensaResponse.class)))),
             })
     @GetMapping
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<List<ExpensaResponse>> listarTodos(){
         List<Expense> expenses = service.listarTodos();
         List<ExpensaResponse> response = expenses.stream().map(mapper::toResponse).collect(Collectors.toList());
@@ -64,6 +70,7 @@ public class ExpenseController {
 
 
     @Operation(summary = "Deletar Expense pelo id",description = "deletar expense pelo id",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "204",description = "Expense deletada com sucesso",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = Void.class))),
@@ -71,6 +78,7 @@ public class ExpenseController {
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
             })
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
     public  ResponseEntity<Void> deletarPorId(@PathVariable Long id){
         service.deletarPorId(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -78,6 +86,7 @@ public class ExpenseController {
 
 
     @Operation(summary = "Recuperar Expense pelo id",description = "Recuperar Expense pelo id",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "200",description = "Expense recuperado com sucesso",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = ExpensaResponse.class))),
@@ -85,6 +94,7 @@ public class ExpenseController {
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
             })
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
     public  ResponseEntity<ExpensaResponse>buscarPorId(@PathVariable Long id){
         Expense expense = service.buscarPorId(id);
         ExpensaResponse response = mapper.toResponse(expense);
@@ -93,6 +103,7 @@ public class ExpenseController {
 
 
     @Operation(summary = "Atualizar Expense", description = " atualizar Expense",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "200",description = "Expense atualizada com sucesso",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = ExpensaResponse.class))),
@@ -102,6 +113,7 @@ public class ExpenseController {
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErroMessage.class)))
             })
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
     public  ResponseEntity<ExpensaResponse> editarExpense(@Valid @PathVariable Long id, @RequestBody ExpenseRequest request){
         request.setId(id);
         Expense expense = service.editarIncome(request);

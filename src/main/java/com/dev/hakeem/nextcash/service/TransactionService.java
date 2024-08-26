@@ -1,60 +1,48 @@
 package com.dev.hakeem.nextcash.service;
 
-import com.dev.hakeem.nextcash.entity.Account;
-import com.dev.hakeem.nextcash.entity.Transaction;
-import com.dev.hakeem.nextcash.exception.EntityNotFoundException;
-import com.dev.hakeem.nextcash.repository.AccountRepository;
-import com.dev.hakeem.nextcash.repository.TranssactionRepository;
-import com.dev.hakeem.nextcash.web.exception.BusinessException;
-import com.dev.hakeem.nextcash.web.request.TransactionRequest;
+import com.dev.hakeem.nextcash.entity.*;
+import com.dev.hakeem.nextcash.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class TransactionService {
 
-    private final TranssactionRepository repository;
-    private final AccountRepository accountRepository;
+    private final ExpenseRepository expenseRepository;
+    private final IncomeRepository incomeRepository;
+    private  final TranssactionRepository transsactionRepository;
+    private final TransferencaRepository transferencaRepository;
     @Autowired
-    public TransactionService(TranssactionRepository repository, AccountRepository accountRepository) {
-        this.repository = repository;
-        this.accountRepository = accountRepository;
+    public TransactionService(ExpenseRepository expenseRepository, IncomeRepository incomeRepository, TranssactionRepository transsactionRepository, TransferencaRepository transferencaRepository) {
+        this.expenseRepository = expenseRepository;
+        this.incomeRepository = incomeRepository;
+        this.transsactionRepository = transsactionRepository;
+        this.transferencaRepository = transferencaRepository;
     }
 
-    public Transaction createTransaction(TransactionRequest request){
-        Optional<Account> account = accountRepository.findById(request.getAccountId());
-        if (!account.isPresent()) {
-            throw  new EntityNotFoundException("Conta nao encontrada");
+
+   public  List<Transaction>obterTodosasTransferencias(){
+        List<Transaction> transactions = new ArrayList<>();
+
+        List<Expense> despensas = expenseRepository.findAll();
+        for (Expense expense: despensas){
+            transactions.add(new Transaction(expense));
         }
-            Transaction transaction = new Transaction();
-            transaction.setId(request.getId());
-            transaction.setDescription(request.getDescription());
-            transaction.setTransactionType(request.getTransactionType());
-            transaction.setAmount(request.getAmount());
-            transaction.setDate(request.getDate());
 
-            transaction.setAccount(account.get());
-            return repository.save(transaction);
+       List<Income> incomes = incomeRepository.findAll();
+       for (Income income: incomes){
+           transactions.add(new Transaction(income));
+       }
 
+       List<Transferenca> transferencas =transferencaRepository.findAll();
+       for (Transferenca transferenca: transferencas){
+           transactions.add(new Transaction(transferenca));
+       }
+       return transactions;
+   }
 
-    }
-
-    public void deletar(Long id){
-         if (!repository.existsById(id)){
-             throw new EntityNotFoundException(String.format("Transaction id = %s não encontrado",id));
-         }
-         repository.deleteById(id);
-    }
-
-    public Transaction buscarPorid(Long id){
-       return repository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(String.format("Transaction id = %s não encontrado",id)));
-    }
-
-    public List<Transaction> listarTodos(){
-       return repository.findAll();
-    }
 }

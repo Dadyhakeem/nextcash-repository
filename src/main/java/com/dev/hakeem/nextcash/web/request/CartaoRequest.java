@@ -1,11 +1,7 @@
 package com.dev.hakeem.nextcash.web.request;
 
 import com.dev.hakeem.nextcash.enums.MarcaCartao;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class CartaoRequest {
 
-    private Long id;
+
 
     @NotNull(message = "Conta não pode ser nula")
     @Positive(message = "ID da conta deve ser positivo")
@@ -29,14 +25,14 @@ public class CartaoRequest {
     private String descricao;
 
     @NotNull(message = "Marca do cartão não pode ser nula")
-    private MarcaCartao marcaCartao;
+    private String marcaCartao;
 
     @NotNull(message = "Limite não pode ser nulo")
     @Positive(message = "Limite deve ser positivo")
     private Double limite;
 
     @NotNull(message = "Data de fechamento não pode ser nula")
-    @PastOrPresent(message = "Data de fechamento deve ser no passado ou presente")
+    @FutureOrPresent(message = "Data de fechamento deve ser no futuro ou presente")
     private LocalDate fechamento;
 
     @NotNull(message = "Data de vencimento não pode ser nula")

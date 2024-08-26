@@ -20,9 +20,7 @@ public class TransferencaRequest {
 
     private Long id;
 
-    @NotNull(message = "O ID da transação não pode ser nulo.")
-    @Positive(message = "O ID da transação deve ser um valor positivo.")
-    private Long transaction;
+
 
     @Size(max = 255, message = "A descrição não pode ter mais de 255 caracteres.")
     private String descricao;

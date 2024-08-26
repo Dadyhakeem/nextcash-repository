@@ -11,11 +11,13 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -36,14 +38,16 @@ public class AccountController {
     }
 
     @Operation(summary = "Criar conta",description = "criar conta",
+            security = @SecurityRequirement(name = "security"),
          responses = {
             @ApiResponse(responseCode = "201",description = "Conta criada com sucesso",
                      content = @Content(mediaType = "application/json",schema = @Schema(implementation = AccountResponse.class))),
-            @ApiResponse(responseCode = "400",description = "Recursos nao processado por dados de entrada  invalidos",
+            @ApiResponse(responseCode = "422",description = "Recursos nao processado por dados de entrada  invalidos",
                          content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
 
     })
     @PostMapping
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<AccountResponse> createAccount(@Valid @RequestBody AccountRequest request) {
         Account account = service.createAccount(request);
         AccountResponse response = toAccountMapper.toReponse(account);
@@ -51,6 +55,7 @@ public class AccountController {
     }
 
     @Operation(summary = "Recuperar conta pelo id",description = "Recuperar conta pelo id",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "200",description = "Conta reuperado com sucesso",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = AccountResponse.class))),
@@ -58,6 +63,7 @@ public class AccountController {
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
             })
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<AccountResponse> getAccountById(@PathVariable Long id) {
         Account account = service.buscarPorId(id);
         AccountResponse response = toAccountMapper.toReponse(account);
@@ -65,12 +71,14 @@ public class AccountController {
     }
 
     @Operation(summary = "Listar todos as contas",description = "Recurso pra listar todos as contas",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "200",description = "Todas as contas cadastrada",
                             content = @Content(mediaType = "application/json",
                                     array  = @ArraySchema(schema = @Schema(implementation = AccountResponse.class)))),
             })
     @GetMapping
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<List<AccountResponse>> listAllAccounts() {
         List<Account> accounts = service.listarTodos();
         List<AccountResponse> responseList = accounts.stream()
@@ -80,6 +88,7 @@ public class AccountController {
     }
 
     @Operation(summary = "Deletar conta pelo id",description = "deletar conta pelo id",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "204",description = "Conta deletada com sucesso",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = Void.class))),
@@ -87,6 +96,7 @@ public class AccountController {
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
             })
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
         service.deleteAccount(id);
         return ResponseEntity.noContent().build();

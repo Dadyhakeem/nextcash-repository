@@ -40,10 +40,9 @@ public class IncomeMapper {
         income.setCategoryIncome(request.getCategoryIncome());
         Account acc = accountRepository.findById(request.getAccount())
                 .orElseThrow(()-> new EntityNotFoundException("Account   não encontrado"));
-        Transaction transaction = transsactionRepository.findById(request.getTransaction())
-                .orElseThrow(()-> new EntityNotFoundException("Transaction  não encontrado"));
+
         income.setAccount(acc);
-        income.setTransaction(transaction);
+
         return income;
     }
 

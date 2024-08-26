@@ -18,26 +18,21 @@ public class CartaoResponse {
 
         private Long id;
 
-        @NotNull(message = "Conta não pode ser nula")
-        @Positive(message = "ID da conta deve ser positivo")
+
         private Long account;
 
-        @NotBlank(message = "Descrição não pode ser vazia")
         private String descricao;
 
-        @NotNull(message = "Marca do cartão não pode ser nula")
-        private MarcaCartao marcaCartao;
 
-        @NotNull(message = "Limite não pode ser nulo")
-        @Positive(message = "Limite deve ser positivo")
+        private String marcaCartao;
+
+
         private Double limite;
 
-        @NotNull(message = "Data de fechamento não pode ser nula")
-        @PastOrPresent(message = "Data de fechamento deve ser no passado ou presente")
+
         private LocalDate fechamento;
 
-        @NotNull(message = "Data de vencimento não pode ser nula")
-        @Future(message = "Data de vencimento deve ser no futuro")
+
         private LocalDate vencimento;
 
 

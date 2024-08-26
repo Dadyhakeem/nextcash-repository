@@ -20,15 +20,14 @@ public class AccountResponse {
 
 
 
-    @NotNull(message = "Balance cannot be null")
-    @Positive(message = "Balance must be positive")
+
     private Double balance;
 
-    @NotBlank(message = "Financial institution cannot be blank")
+
     private String financialInstitution;
 
-    @NotNull(message = "Account type cannot be null")
-    private AccountType accountType;
+
+    private String accountType;
 
     @Override
     public boolean equals(Object o) {

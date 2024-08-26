@@ -18,32 +18,22 @@ import java.util.Objects;
 @NoArgsConstructor
 public class AccountRequest {
 
-    private  Long id;
+
 
 
 
     @NotNull(message = "Balance cannot be null")
-    @Positive(message = "Balance must be positive")
+    @Positive(message = "Balance deve ser  positive")
     private Double balance;
 
-    @NotBlank(message = "Financial institution cannot be blank")
+    @NotBlank(message = "Financial institution nao pode ser null")
     private String financialInstitution;
 
-    @NotNull(message = "Account type cannot be null")
-    private AccountType accountType;
-    @NotNull
-    private Long user;
+    @NotBlank(message = "Account nao deve ser null")
+    private String accountType;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AccountRequest that = (AccountRequest) o;
-        return Objects.equals(id, that.id);
-    }
+    private Long userId;
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+
+
 }

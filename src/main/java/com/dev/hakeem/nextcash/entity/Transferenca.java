@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Getter
@@ -25,9 +26,7 @@ public class Transferenca implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "transaction_id")
-    private Transaction transaction;
+
 
     @Column(name = "valor", nullable = false)
     private Double valor;
@@ -44,12 +43,9 @@ public class Transferenca implements Serializable {
     private Account accountDestino;
 
     @Column(name = "created_at", updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Timestamp createdAt;
+    private LocalDate createdAt;
 
-    @Column(name = "updated_at")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Timestamp updatedAt;
+
 
     @Override
     public boolean equals(Object o) {

@@ -12,9 +12,11 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,6 +37,7 @@ public class CategoryController {
 
 
     @Operation(summary = "Criar Category",description = "criar Category",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "201", description = "Category criada com sucesso",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryResponse.class))),
@@ -42,7 +45,8 @@ public class CategoryController {
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErroMessage.class)))
             })
      @PostMapping
-     public ResponseEntity<CategoryResponse> createCatecory(@Valid @RequestBody CategoryRequest request){
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<CategoryResponse> createCatecory(@Valid @RequestBody CategoryRequest request){
          Category category = service.createCategory(request);
          CategoryResponse response = mapper.toResponse(category);
          return ResponseEntity.ok().body(response);
@@ -50,6 +54,7 @@ public class CategoryController {
 
 
     @Operation(summary = "Atualizar Category", description = " atualizar Category",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "200",description = "Category atualizada com sucesso",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = CategoryResponse.class))),
@@ -59,7 +64,8 @@ public class CategoryController {
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErroMessage.class)))
             })
      @PutMapping("/{id}")
-     public ResponseEntity<CategoryResponse> atualizarCategory(@Valid @PathVariable Long id,@RequestBody CategoryRequest request){
+    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
+    public ResponseEntity<CategoryResponse> atualizarCategory(@Valid @PathVariable Long id,@RequestBody CategoryRequest request){
          request.setId(id);
         Category category = service.atualizar(request);
         CategoryResponse response = mapper.toResponse(category);
@@ -68,6 +74,7 @@ public class CategoryController {
 
 
     @Operation(summary = "Recuperar Category pelo id",description = "Recuperar Category pelo id",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "200",description = "Category recuperado com sucesso",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = CategoryResponse.class))),
@@ -75,7 +82,8 @@ public class CategoryController {
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
             })
      @GetMapping("/{id}")
-     public ResponseEntity<CategoryResponse>BuscarPorId(@Valid @PathVariable Long id){
+    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
+    public ResponseEntity<CategoryResponse>BuscarPorId(@Valid @PathVariable Long id){
          Category category = service.buscarPorId(id);
          CategoryResponse response = mapper.toResponse(category);
          return ResponseEntity.ok().body(response);
@@ -83,13 +91,15 @@ public class CategoryController {
 
 
     @Operation(summary = "Listar todos os Category",description = "Recurso pra listar todos os Category",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "200",description = "Todas os Category criados",
                             content = @Content(mediaType = "application/json",
                                     array  = @ArraySchema(schema = @Schema(implementation = CategoryResponse.class)))),
             })
      @GetMapping
-     public ResponseEntity<List<CategoryResponse>> listarTodos(){
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<List<CategoryResponse>> listarTodos(){
         List<Category> categories = service.listarTodos();
         List<CategoryResponse> responses = categories.stream().map(mapper::toResponse).collect(Collectors.toList());
         return ResponseEntity.ok(responses);
@@ -97,6 +107,7 @@ public class CategoryController {
 
 
     @Operation(summary = "Deletar Category pelo id",description = "deletar Category pelo id",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "204",description = "Category deletada com sucesso",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = Void.class))),
@@ -104,7 +115,8 @@ public class CategoryController {
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
             })
      @DeleteMapping("/{id}")
-     public ResponseEntity<Void> deletarPorId(@Valid @PathVariable Long id){
+    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
+    public ResponseEntity<Void> deletarPorId(@Valid @PathVariable Long id){
         service.deletar(id);
         return ResponseEntity.noContent().build();
      }

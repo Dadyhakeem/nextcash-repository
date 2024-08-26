@@ -21,8 +21,7 @@ public class TransactionRequest {
 
     private Long id;
 
-    @NotNull(message = "O tipo de transação não pode ser nulo")
-    private TransactionType transactionType;
+
 
     @DecimalMin(value = "0.01", message = "O valor deve ser positivo")
     private Double amount;

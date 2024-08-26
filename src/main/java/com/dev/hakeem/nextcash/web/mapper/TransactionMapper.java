@@ -1,52 +1,75 @@
 package com.dev.hakeem.nextcash.web.mapper;
 
-import com.dev.hakeem.nextcash.entity.Account;
 import com.dev.hakeem.nextcash.entity.Transaction;
-import com.dev.hakeem.nextcash.repository.AccountRepository;
-import com.dev.hakeem.nextcash.repository.TranssactionRepository;
-import com.dev.hakeem.nextcash.web.exception.BusinessException;
-import com.dev.hakeem.nextcash.web.request.TransactionRequest;
-import com.dev.hakeem.nextcash.web.response.TransactionResponse;
+import com.dev.hakeem.nextcash.entity.Transferenca;
+import com.dev.hakeem.nextcash.web.response.*;
+import jakarta.annotation.PostConstruct;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
 @Component
 public class TransactionMapper {
 
-    private  final AccountRepository accountRepository;
-    private  final TranssactionRepository repository;
+    private final ModelMapper modelMapper = new ModelMapper();
 
-    public TransactionMapper(AccountRepository accountRepository, TranssactionRepository repository) {
-        this.accountRepository = accountRepository;
-        this.repository = repository;
-    }
+    public TransactionResponse mapToResponse(Transaction transaction) {
+        Object detalhes = null;
 
-    public Transaction ToResquest(TransactionRequest request){
+        switch (transaction.getTipo()) {
+            case RECEITA:
+                detalhes = new IncomeResponse(
+                        transaction.getIncome().getId(),
+                        transaction.getIncome().getCategoryIncome(),
+                        transaction.getIncome().getAmount(),
+                        transaction.getIncome().getDescricao()
+                );
+                break;
+            case DESPESA:
+                detalhes = new ExpensaResponse(
+                        transaction.getExpense().getId(),
+                        transaction.getExpense().getCategoryExpense(),
+                        transaction.getExpense().getAmount(),
+                        transaction.getExpense().getDescricao(),
+                        transaction.getExpense().getCreatedAt()
+
+                );
+                break;
+            case TRANSFERENCA:
+                detalhes = new TransactiontTransferenciaResponse(
+                        transaction.getTransferenca().getId(),
+                        transaction.getTransferenca().getValor(),
+                        transaction.getTransferenca().getAccountOrigem().getAccountType().name(), // Tipo da conta de origem
+                        transaction.getTransferenca().getAccountOrigem().getFinancialInstitution(), // Instituição financeira da conta de origem
+                        transaction.getTransferenca().getAccountOrigem().getUserid().getUsername(), // Usuário associado à conta de origem
+                        transaction.getTransferenca().getAccountDestino().getAccountType().name(), // Tipo da conta de destino
+                        transaction.getTransferenca().getAccountDestino().getFinancialInstitution(), // Instituição financeira da conta de destino
+                        transaction.getTransferenca().getAccountDestino().getUserid().getUsername() // Usuário associado à conta de destino
+                );
+                break;
 
 
-        Transaction transaction = new Transaction();
-        transaction.setId(request.getId());
-        transaction.setDescription(request.getDescription());
-        transaction.setTransactionType(request.getTransactionType());
-        transaction.setAmount(request.getAmount());
-        transaction.setDate(request.getDate());
-        Optional<Account> account = accountRepository.findById(request.getAccountId());
-        if (!account.isPresent()) {
-               throw  new BusinessException("Conta nao encontrada");
         }
-        transaction.setAccount(account.get());
-        return transaction;
 
+        return new TransactionResponse(
+                 // Certifique-se que o valor seja do tipo Double
+                transaction.getTipo(), // Certifique-se que o tipo seja do enum TransactionType
+                detalhes
+
+        );
     }
 
-    public TransactionResponse ToResponse(Transaction transaction){
 
-        TransactionResponse response = new TransactionResponse();
-        response.setId(transaction.getId());
-        response.setDate(transaction.getDate());
-        response.setTransactionType(transaction.getTransactionType());
-        response.setDescription(transaction.getDescription());
-        response.setAmount(transaction.getAmount());
-        return response;
+    public TransactiontTransferenciaResponse toTransferencaResponse(Transferenca transferencia) {
+        return modelMapper.map(transferencia, TransactiontTransferenciaResponse.class);
     }
+
+    @PostConstruct
+    public void init() {
+        modelMapper.typeMap(Transferenca.class, TransactiontTransferenciaResponse.class)
+                .addMapping(src -> src.getAccountOrigem().getId(), TransactiontTransferenciaResponse::setAccountOrigem)
+                .addMapping(src -> src.getAccountDestino().getId(), TransactiontTransferenciaResponse::setAccountDestino);
+    }
+
+
+
 }

@@ -1,9 +1,6 @@
 package com.dev.hakeem.nextcash.web.exception;
 
-import com.dev.hakeem.nextcash.exception.CpfUniqueViolationExeption;
-import com.dev.hakeem.nextcash.exception.EmailUniqueViolationExeption;
-import com.dev.hakeem.nextcash.exception.EntityNotFoundException;
-import com.dev.hakeem.nextcash.exception.PasswordInvalidException;
+import com.dev.hakeem.nextcash.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -57,7 +54,7 @@ public class ApiExceptionHandler {
 
     }
 
-    @ExceptionHandler(PasswordInvalidException.class)
+    @ExceptionHandler({PasswordInvalidException.class, NaoAuthorizado.class})
     public ResponseEntity<ErroMessage> PasswordInvalidException(RuntimeException ex,
                                                                HttpServletRequest request
     ){

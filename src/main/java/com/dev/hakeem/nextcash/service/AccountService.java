@@ -1,6 +1,7 @@
 package com.dev.hakeem.nextcash.service;
 import com.dev.hakeem.nextcash.entity.Account;
 import com.dev.hakeem.nextcash.entity.User;
+import com.dev.hakeem.nextcash.enums.AccountType;
 import com.dev.hakeem.nextcash.exception.EntityNotFoundException;
 import com.dev.hakeem.nextcash.repository.AccountRepository;
 import com.dev.hakeem.nextcash.repository.UserRepository;
@@ -22,7 +23,7 @@ public class AccountService {
 
     public Account createAccount(AccountRequest request) {
         // Verifica se o usuário existe no banco de dados
-        Optional<User> userOptional = userRepository.findById(request.getUser());
+        Optional<User> userOptional = userRepository.findById(request.getUserId());
 
         if (!userOptional.isPresent()) {
             throw new EntityNotFoundException("Usuário não encontrado");
@@ -31,9 +32,9 @@ public class AccountService {
         // Cria uma nova instância de Account
         Account account = new Account();
         account.setFinancialInstitution(request.getFinancialInstitution());
-        account.setAccountType(request.getAccountType());
+        account.setAccountType(AccountType.valueOf(request.getAccountType()));
         account.setBalance(request.getBalance());
-        account.setUser(userOptional.get());  // Define o usuário encontrado
+        account.setUserid(userOptional.get());  // Define o usuário encontrado
 
         // Salva a conta no repositório e retorna
         return repository.save(account);

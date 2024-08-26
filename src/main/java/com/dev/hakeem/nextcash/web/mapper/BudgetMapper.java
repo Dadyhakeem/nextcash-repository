@@ -3,6 +3,8 @@ package com.dev.hakeem.nextcash.web.mapper;
 import com.dev.hakeem.nextcash.entity.Budget;
 import com.dev.hakeem.nextcash.entity.Category;
 import com.dev.hakeem.nextcash.entity.User;
+import com.dev.hakeem.nextcash.enums.AccountType;
+import com.dev.hakeem.nextcash.enums.CategoryExpense;
 import com.dev.hakeem.nextcash.exception.EntityNotFoundException;
 import com.dev.hakeem.nextcash.repository.BudgetRepository;
 import com.dev.hakeem.nextcash.repository.CategoryRepository;
@@ -13,6 +15,9 @@ import com.dev.hakeem.nextcash.web.response.BudgetResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
 @Component
@@ -28,32 +33,53 @@ public class BudgetMapper {
         this.repository = repository;
     }
 
-    public Budget toRequest(BudgetRequest request){
 
+
+    public Budget toRequest(BudgetRequest request) {
         Budget budget = new Budget();
-        budget.setId(request.getId());
         budget.setAmount(request.getAmount());
-        budget.setStartDate(request.getStartDate());
-        budget.setEndDate(request.getEndDate());
-        budget.setCategoryExpense(request.getCategoryExpense());
+
+        try {
+            // Converte as strings para LocalDate
+            LocalDate startDate = LocalDate.parse(request.getStartDate());
+            LocalDate endDate = LocalDate.parse(request.getEndDate());
+
+            budget.setStartDate(startDate);
+            budget.setEndDate(endDate);
+        } catch (DateTimeParseException e) {
+            // Lida com o erro de parsing de data
+            throw new IllegalArgumentException("Formato de data inválido", e);
+        }
+
+        try {
+            CategoryExpense categoryExpense = CategoryExpense.valueOf(request.getCategoryExpense());
+            budget.setCategoryExpense(categoryExpense);
+        } catch (IllegalArgumentException e) {
+            throw new BusinessException("Tipo de conta inválido: " + request.getCategoryExpense());
+        }
+
         Optional<User> user = userRepository.findById(request.getUserId());
-        if (!user.isPresent()){
-            throw new EntityNotFoundException("Usuario nao encontrada");
+        if (!user.isPresent()) {
+            throw new EntityNotFoundException("Usuário não encontrado");
         }
         budget.setUser(user.get());
 
         return budget;
     }
 
-    public BudgetResponse toResponse(Budget budget){
+
+    public BudgetResponse toResponse(Budget budget) {
         BudgetResponse response = new BudgetResponse();
         response.setId(budget.getId());
         response.setAmount(budget.getAmount());
-        response.setCategoryExpense(budget.getCategoryExpense());
-        response.setStartDate(budget.getStartDate());
-        response.setEndDate(budget.getEndDate());
+        // Convertendo CategoryExpense para String se categoryExpense espera uma String
+        String categoryExpense = budget.getCategoryExpense()!= null ? budget.getCategoryExpense().name() : null;
+        response.setCategoryExpense(categoryExpense);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        response.setStartDate(budget.getStartDate().format(formatter)); // Formata LocalDate para String
+        response.setEndDate(budget.getEndDate().format(formatter));     // Formata LocalDate para String
 
         return response;
-
     }
 }

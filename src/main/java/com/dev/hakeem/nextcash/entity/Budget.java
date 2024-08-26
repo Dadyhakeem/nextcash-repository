@@ -3,6 +3,7 @@ package com.dev.hakeem.nextcash.entity;
 import com.dev.hakeem.nextcash.enums.CategoryExpense;
 import com.dev.hakeem.nextcash.enums.CategoryIncome;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
@@ -32,10 +34,10 @@ public class Budget implements Serializable {
     private Double amount;
 
     @Column(name = "startDate", nullable = false)
-    private Date startDate;
+    private LocalDate startDate;
 
     @Column(name = "endDate", nullable = false)
-    private Date endDate;
+    private LocalDate endDate;
 
     @CreationTimestamp
     @Column(name = "createdAt", updatable = false)

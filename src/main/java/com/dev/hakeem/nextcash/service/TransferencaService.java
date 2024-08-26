@@ -43,8 +43,7 @@ public class TransferencaService {
                 .orElseThrow(() -> new EntityNotFoundException("Conta origem não encontrada."));
         Account accountDestino = accountRepository.findById(request.getAccountDestino())
                 .orElseThrow(() -> new EntityNotFoundException("Conta destino não encontrada."));
-        Transaction transaction = transsactionRepository.findById(request.getTransaction())
-                .orElseThrow(() -> new EntityNotFoundException("Transação não encontrada."));
+
 
         // Verifica se o saldo da conta origem é suficiente
         debitar(accountOrigem, request.getValor());
@@ -53,14 +52,14 @@ public class TransferencaService {
         // Salva as contas e a transação no repositório
         accountRepository.save(accountOrigem);
         accountRepository.save(accountDestino);
-        transsactionRepository.save(transaction);
+
 
         // Cria e salva a transferência
         Transferenca transferenca = new Transferenca();
         transferenca.setDescricao(request.getDescricao());
         transferenca.setAccountOrigem(accountOrigem);
         transferenca.setAccountDestino(accountDestino);
-        transferenca.setTransaction(transaction);
+
         transferenca.setValor(request.getValor());
         repository.save(transferenca);
     }

@@ -52,7 +52,7 @@ public class Account implements Serializable {
     private Timestamp updatedAt;
     @ManyToOne
     @JoinColumn(name = "userId")
-    private User user;
+    private User userid;
 
     @Override
     public boolean equals(Object o) {

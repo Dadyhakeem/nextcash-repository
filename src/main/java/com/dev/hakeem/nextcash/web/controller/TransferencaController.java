@@ -13,11 +13,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -37,6 +39,7 @@ public class TransferencaController {
 
 
     @Operation(summary = "Criar Transferenca",description = "criar Transferenca",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "201", description = "Transferenca criada com sucesso",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = TransferencaResponse.class))),
@@ -44,6 +47,7 @@ public class TransferencaController {
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErroMessage.class)))
             })
     @PostMapping("/realizar")
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<String> realizarTransferencia(@Valid @RequestBody TransferencaRequest transferencaRequest) {
         try {
             transferencaService.createTransfer(transferencaRequest);
@@ -57,6 +61,7 @@ public class TransferencaController {
 
 
     @Operation(summary = "Recuperar Transferenca pelo id",description = "Recuperar Transferenca pelo id",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "200",description = "Transferenca recuperado com sucesso",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = TransferencaResponse.class))),
@@ -64,6 +69,7 @@ public class TransferencaController {
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
             })
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
     public ResponseEntity<TransferencaResponse> obterTransferenciaPorId(@Valid @PathVariable Long id) {
         try {
             Transferenca transferenca = transferencaService.obterTranferPorId(id);
@@ -77,6 +83,7 @@ public class TransferencaController {
 
 
     @Operation(summary = "Deletar Transferenca pelo id",description = "deletar Transferenca pelo id",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "204",description = "Transferenca deletada com sucesso",
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = Void.class))),
@@ -84,6 +91,7 @@ public class TransferencaController {
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
             })
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
     public ResponseEntity<String> deletarTransferencia(@Valid @PathVariable Long id) {
         try {
             transferencaService.deletPorId(id);

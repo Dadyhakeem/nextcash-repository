@@ -19,18 +19,17 @@ public class BudgetResponse {
 
     private Long id;
 
-    @NotNull(message = "O valor não pode ser nulo")
-    @DecimalMin(value = "0.01", message = "O valor deve ser positivo")
+
     private Double amount;
 
-    @NotNull(message = "A data de início não pode ser nula")
-    private Date startDate;
 
-    @NotNull(message = "A data de término não pode ser nula")
-    private Date endDate;
+    private String startDate;
 
-    @NotNull(message = "CategoryExpense")
-    private CategoryExpense categoryExpense;
+
+    private String endDate;
+
+
+    private String categoryExpense;
 
 
 }

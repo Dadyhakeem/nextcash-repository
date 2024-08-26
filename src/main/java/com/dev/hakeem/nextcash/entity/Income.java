@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Getter
@@ -15,7 +16,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "tb_expense")
+@Table(name = "incomes")
 public class Income {
 
     @Id
@@ -42,7 +43,7 @@ public class Income {
     private Account account;
 
     @Column(name = "created_at", updatable = false)
-    private Timestamp createdAt;
+    private LocalDate createdAt;
 
     @Column(name = "updated_at")
     private Timestamp updatedAt;
