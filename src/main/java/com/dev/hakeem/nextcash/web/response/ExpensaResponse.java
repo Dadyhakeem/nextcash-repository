@@ -21,7 +21,7 @@ public class ExpensaResponse {
     private Long id;
 
 
-    private CategoryExpense categoryExpense;
+    private String categoryExpense;
 
 
     private Double amount;

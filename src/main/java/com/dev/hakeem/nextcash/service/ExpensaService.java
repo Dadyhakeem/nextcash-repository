@@ -44,6 +44,7 @@ public class ExpensaService {
         String authenticationEmail  = getAuthenticatedEmail();
         User authentificationUser = userService.BuscarPorEmail(authenticationEmail);
 
+
         // Cria um novo objeto Expense
         Expense expense = new Expense();
         expense.setDescricao(request.getDescricao());
@@ -66,6 +67,10 @@ public class ExpensaService {
         // Busca a conta  associadas ao ID fornecidos
         Account acc = accountRepository.findById(request.getAccount())
                 .orElseThrow(()-> new EntityNotFoundException("Account   não encontrado"));
+
+        if (!acc.getUserid().getId().equals(authentificationUser.getId())) {
+            throw new BusinessException("Você não tem permissão para adicionar despesas nesta conta.");
+        }
 
 
         // Configura a receita com a conta e a transação

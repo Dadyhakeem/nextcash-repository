@@ -27,7 +27,7 @@ public class TransactionMapper {
             case DESPESA:
                 detalhes = new ExpensaResponse(
                         transaction.getExpense().getId(),
-                        transaction.getExpense().getCategoryExpense(),
+                        transaction.getExpense().getCategoryExpense().name(),
                         transaction.getExpense().getAmount(),
                         transaction.getExpense().getDescricao(),
                         transaction.getExpense().getCreatedAt()

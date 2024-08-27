@@ -64,7 +64,7 @@ public class ExpensaMapper {
         response.setId(expense.getId());
         response.setDescricao(expense.getDescricao());
         response.setAmount(expense.getAmount());
-        response.setCategoryExpense(expense.getCategoryExpense());
+        response.setCategoryExpense(expense.getCategoryExpense() != null ? expense.getCategoryExpense().name(): null);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         response.setCreatedAt(LocalDate.parse(expense.getCreatedAt().format(formatter)));
 

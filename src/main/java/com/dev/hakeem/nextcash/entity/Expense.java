@@ -36,7 +36,7 @@ public class Expense {
     private String descricao;
 
     @ManyToOne
-    @JoinColumn(name = "accountId", nullable = false)
+    @JoinColumn(name = "account", nullable = false)
     private Account account;
 
     @Column(name = "createdAt")
