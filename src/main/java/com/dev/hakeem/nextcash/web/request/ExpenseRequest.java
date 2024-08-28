@@ -19,7 +19,7 @@ import java.time.LocalDate;
 @Setter
 public class ExpenseRequest {
 
-    private Long id;
+
 
     @NotNull(message = "Categoria não pode ser nula")
     private String categoryExpense;

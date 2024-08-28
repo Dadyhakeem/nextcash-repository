@@ -6,6 +6,7 @@ import com.dev.hakeem.nextcash.entity.Transaction;
 import com.dev.hakeem.nextcash.entity.User;
 import com.dev.hakeem.nextcash.enums.CategoryExpense;
 import com.dev.hakeem.nextcash.exception.EntityNotFoundException;
+import com.dev.hakeem.nextcash.exception.NaoAuthorizado;
 import com.dev.hakeem.nextcash.repository.AccountRepository;
 import com.dev.hakeem.nextcash.repository.ExpenseRepository;
 import com.dev.hakeem.nextcash.repository.TranssactionRepository;
@@ -103,11 +104,14 @@ public class ExpensaService {
                 .orElseThrow(()-> new EntityNotFoundException(String.format("despesa do id %s não encontrado",id)));
     }
 
-    public  Expense editarIncome(ExpenseRequest request){
+    public  Expense editarIncome(Long id,ExpenseRequest request){
         String authenticatedEmail = getAuthenticatedEmail();
         User authenticatedUser = userService.BuscarPorEmail(authenticatedEmail);
-        Expense expense = repository.findById(request.getId())
+        Expense expense = repository.findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("Despesa não encontrado"));
+        if (!expense.getId().equals(id)) {
+            throw new NaoAuthorizado("Usuário não autorizado a atualizar este orçamento");
+        }
 
         expense.setDescricao(request.getDescricao());
         expense.setAmount(request.getAmount());

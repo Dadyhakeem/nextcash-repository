@@ -79,7 +79,7 @@ public class CartaoController {
             })
     @GetMapping("/{id}")
     @PreAuthorize("hasRole( 'CLIENT')")
-    private ResponseEntity<CartaoResponse> buscarPorId(@Valid @PathVariable Long id){
+    private ResponseEntity<CartaoResponse> buscarPorId( @Valid @PathVariable Long id){
         Cartao cartao = service.buscarPorId(id);
         CartaoResponse response = mapper.toResponse(cartao);
         return ResponseEntity.ok().body(response);

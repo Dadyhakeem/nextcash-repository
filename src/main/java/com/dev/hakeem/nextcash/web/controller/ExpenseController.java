@@ -5,6 +5,7 @@ import com.dev.hakeem.nextcash.service.ExpensaService;
 import com.dev.hakeem.nextcash.web.exception.ErroMessage;
 import com.dev.hakeem.nextcash.web.mapper.ExpensaMapper;
 import com.dev.hakeem.nextcash.web.request.ExpenseRequest;
+import com.dev.hakeem.nextcash.web.request.UpadteExpense;
 import com.dev.hakeem.nextcash.web.response.CartaoResponse;
 import com.dev.hakeem.nextcash.web.response.ExpensaResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -115,8 +116,8 @@ public class ExpenseController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('CLIENT')")
     public  ResponseEntity<ExpensaResponse> editarExpense(@Valid @PathVariable Long id, @RequestBody ExpenseRequest request){
-        request.setId(id);
-        Expense expense = service.editarIncome(request);
+
+          Expense expense = service.editarIncome(id,request);
         ExpensaResponse response = mapper.toResponse(expense);
         return ResponseEntity.ok().body(response);
     }
