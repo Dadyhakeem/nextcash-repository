@@ -78,7 +78,7 @@ public class ExpenseController {
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
             })
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
+    @PreAuthorize("hasRole('CLIENT')")
     public  ResponseEntity<Void> deletarPorId(@PathVariable Long id){
         service.deletarPorId(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -94,7 +94,7 @@ public class ExpenseController {
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
             })
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
+    @PreAuthorize("hasRole('CLIENT')")
     public  ResponseEntity<ExpensaResponse>buscarPorId(@PathVariable Long id){
         Expense expense = service.buscarPorId(id);
         ExpensaResponse response = mapper.toResponse(expense);
@@ -113,7 +113,7 @@ public class ExpenseController {
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErroMessage.class)))
             })
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
+    @PreAuthorize("hasRole('CLIENT')")
     public  ResponseEntity<ExpensaResponse> editarExpense(@Valid @PathVariable Long id, @RequestBody ExpenseRequest request){
         request.setId(id);
         Expense expense = service.editarIncome(request);
