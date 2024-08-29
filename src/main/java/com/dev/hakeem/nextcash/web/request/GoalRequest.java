@@ -1,22 +1,20 @@
 package com.dev.hakeem.nextcash.web.request;
 
-import com.dev.hakeem.nextcash.entity.User;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Future;
 
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.Objects;
-
 @Getter
 @Setter
+@AllArgsConstructor @NoArgsConstructor
 public class GoalRequest {
 
 
-     private  Long id ;
+
 
     private String name;
     @NotNull(message = "O valor alvo não pode ser nulo")
@@ -28,8 +26,8 @@ public class GoalRequest {
     private Double currentAmount;
 
     @NotNull(message = "O prazo não pode ser nulo")
-    @Future(message = "O prazo deve ser uma data futura")
-    private LocalDate deadline;
+
+    private String  deadline;
 
     @NotNull(message = "O usuário não pode ser nulo")
     private Long userid;

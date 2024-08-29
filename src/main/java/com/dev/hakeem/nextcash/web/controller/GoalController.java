@@ -62,11 +62,12 @@ public class GoalController {
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
             })
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
-    public ResponseEntity<Goal> buscarPorId(@Valid @PathVariable Long id) {
-        Optional<Goal> goal = service.buscarPorId(id);
-        return goal.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    @PreAuthorize("hasRole('CLIENT')")
+    public ResponseEntity<GoalResponse> buscarPorId(@Valid @PathVariable Long id) {
+        Goal goal = service.buscarPorId(id);
+        GoalResponse response = mapper.toGoalResponse(goal);
+        return ResponseEntity.ok(response);
+
     }
 
 
@@ -81,7 +82,7 @@ public class GoalController {
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
             })
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<Void> deletarPorId(@PathVariable Long id) {
         service.deletarPorId(id);
         return ResponseEntity.noContent().build();
@@ -99,10 +100,10 @@ public class GoalController {
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErroMessage.class)))
             })
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<Goal> atualizar(@PathVariable Long id, @Valid @RequestBody GoalRequest request) {
-        request.setId(id);
-        Goal goal = service.atualizar(request);
+
+        Goal goal = service.atualizar(id,request);
         return ResponseEntity.ok().body(goal);
     }
 
