@@ -77,7 +77,7 @@ public class IncomeController {
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
             })
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
+    @PreAuthorize("hasRole('CLIENT')")
     public  ResponseEntity<Void> deletarPorId(@PathVariable Long id){
         service.deletarPorId(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -93,7 +93,7 @@ public class IncomeController {
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
             })
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
+    @PreAuthorize("hasRole('CLIENT')")
     public  ResponseEntity<IncomeResponse>buscarPorId(@PathVariable Long id){
         Income income = service.buscarPorId(id);
         IncomeResponse response = mapper.toResponse(income);
@@ -111,10 +111,10 @@ public class IncomeController {
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErroMessage.class)))
             })
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
+    @PreAuthorize("hasRole('CLIENT')")
     public  ResponseEntity<IncomeResponse> editarIncome(@Valid @PathVariable Long id, @RequestBody IncomeRequest request){
-        request.setId(id);
-        Income income = service.editarIncome(request);
+
+        Income income = service.editarIncome(id,request);
         IncomeResponse response = mapper.toResponse(income);
         return ResponseEntity.ok().body(response);
     }

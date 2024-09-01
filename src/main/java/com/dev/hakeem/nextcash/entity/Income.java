@@ -24,9 +24,7 @@ public class Income {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "transactionId")
-    private Transaction transaction;
+
 
     @Enumerated(EnumType.STRING)
     @Column(name = "categoryIncome")
@@ -42,7 +40,7 @@ public class Income {
     @JoinColumn(name = "accountId", nullable = false)
     private Account account;
 
-    @Column(name = "created_at", updatable = false)
+    @Column(name = "created_at")
     private LocalDate createdAt;
 
     @Column(name = "updated_at")

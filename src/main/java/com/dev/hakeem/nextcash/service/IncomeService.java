@@ -3,13 +3,17 @@ package com.dev.hakeem.nextcash.service;
 import com.dev.hakeem.nextcash.entity.Account;
 import com.dev.hakeem.nextcash.entity.Income;
 import com.dev.hakeem.nextcash.entity.Transaction;
+import com.dev.hakeem.nextcash.enums.CategoryIncome;
 import com.dev.hakeem.nextcash.exception.EntityNotFoundException;
 import com.dev.hakeem.nextcash.repository.AccountRepository;
 import com.dev.hakeem.nextcash.repository.IncomeRepository;
 import com.dev.hakeem.nextcash.repository.TranssactionRepository;
+import com.dev.hakeem.nextcash.web.exception.BusinessException;
 import com.dev.hakeem.nextcash.web.request.IncomeRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Service
@@ -32,10 +36,20 @@ public class IncomeService {
 
         // Cria um novo objeto Income
         Income income = new Income();
-        income.setId(request.getId());
         income.setDescricao(request.getDescricao());
         income.setAmount(request.getAmount());
-        income.setCategoryIncome(request.getCategoryIncome());
+        try{
+            CategoryIncome categoryIncome = CategoryIncome.valueOf(request.getCategoryIncome());
+            income.setCategoryIncome(categoryIncome);
+        }catch (IllegalArgumentException e ){
+            throw new BusinessException("Tipo de Receita nao existe : " + request.getCategoryIncome());
+        }
+        try {
+            LocalDate created_at = LocalDate.parse(request.getCreated_at());
+            income.setCreatedAt(created_at);
+        }catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Formato de data inválido", e);
+        }
 
         // Busca a conta e a transação associadas aos IDs fornecidos
         Account acc = accountRepository.findById(request.getAccount())
@@ -65,13 +79,25 @@ public class IncomeService {
                 .orElseThrow(()-> new EntityNotFoundException(String.format("Receita do id %s não encontrado",id)));
     }
 
-    public  Income editarIncome(IncomeRequest request){
-        Income income = repository.findById(request.getId())
+    public  Income editarIncome(Long id ,IncomeRequest request){
+        Income income = repository.findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("Receita não encontrado"));
 
         income.setDescricao(request.getDescricao());
         income.setAmount(request.getAmount());
-        income.setCategoryIncome(request.getCategoryIncome());
+        try{
+            CategoryIncome categoryIncome = CategoryIncome.valueOf(request.getCategoryIncome());
+            income.setCategoryIncome(categoryIncome);
+        }catch (IllegalArgumentException e ){
+            throw new BusinessException("Tipo de Receita nao existe : " + request.getCategoryIncome());
+        }
+
+        try {
+            LocalDate created_at = LocalDate.parse(request.getCreated_at());
+            income.setCreatedAt(created_at);
+        }catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Formato de data inválido", e);
+        }
         Account acc = accountRepository.findById(request.getAccount())
                 .orElseThrow(()-> new EntityNotFoundException("Account   não encontrado"));
         income.setAccount(acc);

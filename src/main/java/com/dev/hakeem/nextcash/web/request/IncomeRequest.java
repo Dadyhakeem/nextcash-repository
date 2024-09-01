@@ -16,10 +16,10 @@ import lombok.Setter;
 public class IncomeRequest {
 
 
-    private Long id;
+
 
     @NotNull(message = "Categoria não pode ser nula")
-    private CategoryIncome categoryIncome;
+    private String categoryIncome;
 
     @NotNull(message = "Valor não pode ser nulo")
     @Positive(message = "O valor deve ser positivo")
@@ -31,5 +31,7 @@ public class IncomeRequest {
     @NotNull(message = "Conta não pode ser nula")
     @Positive(message = "ID da conta deve ser positivo")
     private Long account;
+    @NotNull
+    private String created_at;
 
 }

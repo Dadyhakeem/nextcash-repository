@@ -86,4 +86,19 @@ public class GoalIT {
         org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
         org.assertj.core.api.Assertions.assertThat(responseBody.getName()).isEqualTo("viagem SENEGAL");
     }
+
+    @Test
+    public void EditarGoal_ComidInValidos_retornarComStatus404(){
+        ErroMessage responseBody = testClient
+                .put()
+                .uri("/api/v1/goals/100")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "user1@gmail.com", "123456"))
+                .bodyValue(new GoalRequest("viagem SENEGAL", 25000.00, 236.00, "2024-12-31", 11L))
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(ErroMessage.class)
+                .returnResult().getResponseBody();
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(404);
+    }
 }

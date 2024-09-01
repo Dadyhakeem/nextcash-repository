@@ -19,9 +19,10 @@ public class TransactionMapper {
             case RECEITA:
                 detalhes = new IncomeResponse(
                         transaction.getIncome().getId(),
-                        transaction.getIncome().getCategoryIncome(),
+                        transaction.getIncome().getCategoryIncome().name(),
                         transaction.getIncome().getAmount(),
-                        transaction.getIncome().getDescricao()
+                        transaction.getIncome().getDescricao(),
+                        transaction.getIncome().getCreatedAt()
                 );
                 break;
             case DESPESA:
