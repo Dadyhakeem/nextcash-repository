@@ -65,10 +65,10 @@ public class InvestimentController {
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErroMessage.class)))
             })
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<InvestmentResponse>atualizar(@PathVariable Long id,@RequestBody InvestmentRequest request){
-        request.setId(id);
-         Investiment investiment = service.atualizar(request);
+
+         Investiment investiment = service.atualizar(id,request);
          InvestmentResponse response =  mapper.toResponse(investiment);
          return ResponseEntity.ok(response);
     }
@@ -99,7 +99,7 @@ public class InvestimentController {
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
             })
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<InvestmentResponse>BuscarPorId(@PathVariable Long id){
          Investiment investiment = service.busrcarPorId(id);
          InvestmentResponse response = mapper.toResponse(investiment);
@@ -116,7 +116,7 @@ public class InvestimentController {
                             content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErroMessage.class)))
             })
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole( 'CLIENT')AND (#id == authentication.principal.id)")
+    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<Void> deletarPorId(@PathVariable Long id){
          service.deletarPorId(id);
          return ResponseEntity.noContent().build();

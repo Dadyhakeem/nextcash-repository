@@ -3,6 +3,7 @@ package com.dev.hakeem.nextcash.web.mapper;
 import com.dev.hakeem.nextcash.entity.Investiment;
 
 import com.dev.hakeem.nextcash.entity.User;
+import com.dev.hakeem.nextcash.enums.TipoInvestimento;
 import com.dev.hakeem.nextcash.repository.InvestmentRepository;
 import com.dev.hakeem.nextcash.repository.UserRepository;
 import com.dev.hakeem.nextcash.web.exception.BusinessException;
@@ -11,6 +12,9 @@ import com.dev.hakeem.nextcash.web.response.InvestmentResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Optional;
 
 @Component
@@ -29,9 +33,21 @@ public class InvestimentMapper {
         Investiment investment = new Investiment();
         investment.setName(request.getName());
         investment.setAmount(request.getAmount());
-        investment.setTipoInvestimento(request.getTipoInvestimento());
-        investment.setStartDate(request.getStartDate());
-        investment.setEndDate(request.getEndDate());
+        try {
+            TipoInvestimento tipoInvestimento = TipoInvestimento.valueOf(request.getTipoInvestimento());
+            investment.setTipoInvestimento(tipoInvestimento);
+        }catch (IllegalArgumentException e ){
+            throw new BusinessException("Tipo de Investimento nao existe : " + request.getTipoInvestimento());
+        }
+        try {
+            LocalDate start_data = LocalDate.parse(request.getStartDate());
+            LocalDate end_data = LocalDate.parse(request.getEndDate());
+            investment.setStartDate(start_data);
+            investment.setEndDate(end_data);
+        }catch (
+                DateTimeParseException e) {
+            throw new IllegalArgumentException("Formato de data inválido", e);
+        }
 
         Optional<User> user = userRepository.findById(request.getUserid());
         if (user.isEmpty()) {
@@ -46,9 +62,10 @@ public class InvestimentMapper {
         response.setId(investment.getId());
         response.setName(investment.getName());
         response.setAmount(investment.getAmount());
-        response.setTipoInvestimento(investment.getTipoInvestimento());
-        response.setStartDate(investment.getStartDate());
-        response.setEndDate(investment.getEndDate());
+        response.setTipoInvestimento(investment.getTipoInvestimento().name());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        response.setStartDate(LocalDate.parse(investment.getStartDate().format(formatter)));
+        response.setEndDate(LocalDate.parse(investment.getEndDate().format(formatter)));
         return response;
     }
 }

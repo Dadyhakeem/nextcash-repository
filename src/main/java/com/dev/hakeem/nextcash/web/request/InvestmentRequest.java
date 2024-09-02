@@ -19,7 +19,7 @@ import java.util.Date;
 @Setter
 public class InvestmentRequest {
 
-    private Long id;  // Pode ser nulo para criação, obrigatório para atualização
+
 
     @NotBlank(message = "O nome do investimento não deve estar em branco")
     @Size(max = 100, message = "O nome do investimento deve ter no máximo 100 caracteres")
@@ -30,7 +30,7 @@ public class InvestmentRequest {
     private Double amount;
 
     @NotNull(message = "O tipo de investimento não pode ser nulo")
-    private TipoInvestimento tipoInvestimento;
+    private String tipoInvestimento;
 
 
 
@@ -38,7 +38,7 @@ public class InvestmentRequest {
     private Long userid;
 
 
-    private Date startDate;
+    private String startDate;
 
-    private Date endDate;
+    private String endDate;
 }

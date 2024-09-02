@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @AllArgsConstructor
@@ -18,22 +19,20 @@ import java.util.Date;
 @Setter
 public class InvestmentResponse {
 
-    private Long id;  // Pode ser nulo para criação, obrigatório para atualização
+    private Long id;
 
-    @NotBlank(message = "O nome do investimento não deve estar em branco")
-    @Size(max = 100, message = "O nome do investimento deve ter no máximo 100 caracteres")
+
     private String name;
 
-    @NotNull(message = "O valor do investimento não pode ser nulo")
-    @Positive(message = "O valor do investimento deve ser positivo")
+
     private Double amount;
 
-    @NotNull(message = "O tipo de investimento não pode ser nulo")
-    private TipoInvestimento tipoInvestimento;
+
+    private String tipoInvestimento;
 
 
-    private Date startDate;
+    private LocalDate startDate;
 
-    private Date endDate;
+    private LocalDate endDate;
 
 }
